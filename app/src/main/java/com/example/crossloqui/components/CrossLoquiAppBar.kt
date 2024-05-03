@@ -17,6 +17,7 @@ import com.example.crossloqui.ui.theme.CrossLoquiTheme
 fun CrossLoquiAppBar(
     modifier: Modifier = Modifier,
     scrollBehavior: TopAppBarScrollBehavior? = null,
+    navigationIcon: @Composable () -> Unit = {},
     title: @Composable () -> Unit,
     actions: @Composable RowScope.() -> Unit = {}
 ) {
@@ -28,6 +29,7 @@ fun CrossLoquiAppBar(
         title = title,
         scrollBehavior = scrollBehavior,
         actions = actions,
+        navigationIcon = navigationIcon,
         modifier = modifier
     )
 }
