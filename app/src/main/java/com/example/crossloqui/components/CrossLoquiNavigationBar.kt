@@ -31,18 +31,21 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
+import com.example.crossloqui.data.NAVIGATION_ITEMS
 import com.example.crossloqui.ui.theme.CrossLoquiTheme
 
 @Composable
-fun CrossLoquiNavigationBar(){
-    var selectedItem by remember {
-        mutableStateOf(0)
+fun CrossLoquiNavigationBar(
+    navController: NavController
+){
+    val selectedItem = remember {
+        mutableStateOf(NAVIGATION_ITEMS[0])
     }
-    val items = listOf("chat", "Post", "Contact", "More")
-    val itemsIcon = listOf(Icons.Filled.ChatBubble, Icons.Filled.GroupWork, Icons.Filled.Contacts, Icons.Filled.MoreHoriz)
-
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center,
@@ -55,11 +58,14 @@ fun CrossLoquiNavigationBar(){
                 .clip(RoundedCornerShape(16.dp))
                 .height(56.dp)
         ) {
-            items.forEachIndexed { index, item ->
+            NAVIGATION_ITEMS.forEach { item ->
                 NavigationBarItem(
-                    selected = selectedItem == index,
-                    onClick = { selectedItem = index },
-                    icon = { Icon(itemsIcon.get(index), contentDescription = item) })
+                    selected = item == selectedItem.value,
+                    onClick = {
+                        selectedItem.value = item
+                        navController.navigate(route = item.route)
+                              },
+                    icon = { Icon(imageVector = item.icon, contentDescription = item.name) })
             }
         }
         Box(
@@ -82,6 +88,6 @@ fun CrossLoquiNavigationBar(){
 @Composable
 fun CrossLoquiNavigationBarPreview() {
     CrossLoquiTheme {
-        CrossLoquiNavigationBar()
+        CrossLoquiNavigationBar(rememberNavController())
     }
 }
