@@ -6,6 +6,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.crossloqui.navigation.Screen
 import com.example.crossloqui.ui.contact.ContactScreen
+import com.example.crossloqui.ui.conversation.ConversationScreen
 import com.example.crossloqui.ui.homepage.HomepageScreen
 import com.example.crossloqui.ui.post.PostScreen
 
@@ -34,6 +35,11 @@ fun SetupNavGraph(
         ) {
             //contact screen
             ContactScreen(navController = navController)
+        }
+        composable(
+            route = Screen.Conversation.route
+        ) {
+            ConversationScreen(navController = navController)
         }
     }
 }
