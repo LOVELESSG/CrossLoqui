@@ -47,7 +47,7 @@ fun CrossLoquiAppBarPreview() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview
 @Composable
-fun CrossLoquiviAppBarPreviewDark() {
+fun CrossLoquiAppBarPreviewDark() {
     CrossLoquiTheme(darkTheme = true) {
         CrossLoquiAppBar(title = { Text(text = "AppBar") })
     }
