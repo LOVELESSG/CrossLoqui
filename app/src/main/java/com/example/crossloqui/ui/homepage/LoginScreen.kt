@@ -1,5 +1,6 @@
 package com.example.crossloqui.ui.homepage
 
+import android.content.ContentValues.TAG
 import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -38,6 +39,8 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.crossloqui.ui.theme.CrossLoquiTheme
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 
 @Composable
 fun LoginScreen(
@@ -120,7 +123,7 @@ fun LoginScreen(
             )
 
             Button(
-                onClick = { /*TODO*/ },
+                onClick = { addFakeData() },
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally)
                     .padding(top = 8.dp)
@@ -135,9 +138,26 @@ fun LoginScreen(
                     .padding(top = 16.dp)
             )
         }
-
-
     }
+}
+
+fun addFakeData() {
+    val db = Firebase.firestore
+
+    val user = hashMapOf(
+        "first" to "Ada",
+        "last" to "Roosevelt",
+        "born" to 1815
+    )
+
+    db.collection("users")
+        .add(user)
+        .addOnSuccessListener { documentReference ->
+            Log.d(TAG, "DocumentSnapshot added with ID: ${documentReference.id}")
+        }
+        .addOnFailureListener { e ->
+            Log.w(TAG, "Error adding document", e)
+        }
 }
 
 @Preview(showSystemUi = true)

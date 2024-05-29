@@ -80,4 +80,7 @@ dependencies {
     // Add support for Firebase Cloud Massage
     implementation(libs.firebase.messaging)
 
+    // Add support for Firebase Firestore
+    implementation(libs.firebase.firestore)
+
 }
