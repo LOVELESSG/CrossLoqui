@@ -2,6 +2,7 @@ package com.example.crossloqui.ui.homepage
 
 import android.content.ContentValues.TAG
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -28,6 +29,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -39,12 +41,15 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.crossloqui.ui.theme.CrossLoquiTheme
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import io.mockk.mockk
 
 @Composable
 fun LoginScreen(
-    navController: NavController
+    navController: NavController,
+    auth: FirebaseAuth
 ) {
     var emailAddress by remember {
         mutableStateOf("")
@@ -56,6 +61,7 @@ fun LoginScreen(
         mutableStateOf(false)
     }
     val annotatedText = buildAnnotatedString { append("Create new account") }
+    val context = LocalContext.current
 
     Column(
         modifier = Modifier
@@ -123,7 +129,20 @@ fun LoginScreen(
             )
 
             Button(
-                onClick = { addFakeData() },
+                onClick = {
+                          auth.signInWithEmailAndPassword(emailAddress, password)
+                              .addOnCompleteListener { task ->
+                                  if (task.isSuccessful) {
+                                      navController.navigate("home_screen")
+                                  } else {
+                                      Toast.makeText(
+                                          context,
+                                          "Authentication failed.",
+                                          Toast.LENGTH_SHORT
+                                      ).show()
+                                  }
+                              }
+                },
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally)
                     .padding(top = 8.dp)
@@ -132,7 +151,9 @@ fun LoginScreen(
             }
             ClickableText(
                 text = annotatedText,
-                onClick = { Log.d("ClickableText", "LoginScreen: $it") },
+                onClick = {
+                          navController.navigate("register_screen")
+                },
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally)
                     .padding(top = 16.dp)
@@ -164,6 +185,7 @@ fun addFakeData() {
 @Composable
 fun LoginScreenPreview() {
     CrossLoquiTheme {
-        LoginScreen(navController = rememberNavController())
+        val fakeFirebaseAuth = mockk<FirebaseAuth>()
+        LoginScreen(navController = rememberNavController(), fakeFirebaseAuth)
     }
 }

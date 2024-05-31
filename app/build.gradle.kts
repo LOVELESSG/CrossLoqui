@@ -47,7 +47,8 @@ android {
     }
     packaging {
         resources {
-            excludes += "/META-INF/{AL2.0,LGPL2.1}"
+            //excludes += "/META-INF/{AL2.0,LGPL2.1}"
+            excludes += "META-INF/*"
         }
     }
 }
@@ -82,5 +83,11 @@ dependencies {
 
     // Add support for Firebase Firestore
     implementation(libs.firebase.firestore)
+
+    // Add support for Firebase Auth
+    implementation(libs.firebase.auth)
+
+    // Add support for mockk
+    implementation(libs.mockk)
 
 }

@@ -11,10 +11,12 @@ import com.example.crossloqui.ui.homepage.HomepageScreen
 import com.example.crossloqui.ui.homepage.LoginScreen
 import com.example.crossloqui.ui.homepage.RegisterScreen
 import com.example.crossloqui.ui.post.PostScreen
+import com.google.firebase.auth.FirebaseAuth
 
 @Composable
 fun SetupNavGraph(
-    navController: NavHostController
+    navController: NavHostController,
+    auth: FirebaseAuth
 ) {
     NavHost(
         navController = navController,
@@ -46,12 +48,12 @@ fun SetupNavGraph(
         composable(
             route = Screen.Login.route
         ) {
-            LoginScreen(navController = navController)
+            LoginScreen(navController = navController, auth = auth)
         }
         composable(
             route = Screen.Register.route
         ) {
-            RegisterScreen(navController = navController)
+            RegisterScreen(navController = navController, auth = auth)
         }
     }
 }

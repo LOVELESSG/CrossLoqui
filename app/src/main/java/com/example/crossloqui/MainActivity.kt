@@ -15,10 +15,14 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.crossloqui.navigation.nav_graph.SetupNavGraph
 import com.example.crossloqui.ui.theme.CrossLoquiTheme
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 
 class MainActivity : ComponentActivity() {
 
     private lateinit var navController: NavHostController
+    private lateinit var auth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,8 +33,16 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
+                    auth = Firebase.auth
                     navController = rememberNavController()
-                    SetupNavGraph(navController = navController)
+
+                    // Check if user is signed in (non-null)
+                    /*val currentUser = auth.currentUser
+                    if (currentUser != null) {
+                        reload()
+                    }*/
+
+                    SetupNavGraph(navController = navController, auth = auth)
                 }
             }
         }
