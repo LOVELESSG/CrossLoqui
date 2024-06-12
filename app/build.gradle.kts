@@ -90,4 +90,13 @@ dependencies {
     // Add support for mockk
     implementation(libs.mockk)
 
+    // Add support for Coil
+    implementation(libs.coil.compose)
+
+    // Add support for Firebase Cloud Storage
+    implementation(libs.firebase.storage)
+
+    // Add support for image cropper
+    implementation(libs.android.image.cropper)
+
 }

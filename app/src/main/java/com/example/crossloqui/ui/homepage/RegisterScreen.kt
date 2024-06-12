@@ -144,31 +144,14 @@ fun RegisterScreen(
                 onClick = {
                     if (emailAddress.isEmpty())
                         Toast.makeText(context,"Please enter your email address", Toast.LENGTH_SHORT).show()
-                    if (password.isEmpty())
+                    else if (password.isEmpty())
                         Toast.makeText(context,"Please enter your password", Toast.LENGTH_SHORT).show()
-                    if (password.length < 6)
+                    else if (password.length < 6)
                         Toast.makeText(context,"Password must be at least 6 characters", Toast.LENGTH_SHORT).show()
-                    if (!emailAddress.equals(emailAddressValid))
+                    else if (!emailAddress.equals(emailAddressValid))
                         Toast.makeText(context,"Email address must be the same", Toast.LENGTH_SHORT).show()
                     else{
-                        try {
-                            auth.createUserWithEmailAndPassword(emailAddress, password)
-                                .addOnCompleteListener { task ->
-                                    if (task.isSuccessful) {
-                                        Toast.makeText(context,"Registration successful", Toast.LENGTH_SHORT).show()
-                                        navController.navigate("home_screen")
-                                    } else {
-                                        val e = task.exception
-                                        if (e is FirebaseAuthUserCollisionException) {
-                                            Toast.makeText(context,"Email address already registered", Toast.LENGTH_SHORT).show()
-                                        } else {
-                                            Toast.makeText(context,"Registration failed", Toast.LENGTH_SHORT).show()
-                                        }
-                                    }
-                                }
-                        } catch (_: Exception) {
-                            Toast.makeText(context,"Registration failed", Toast.LENGTH_SHORT).show()
-                        }
+                        navController.navigate("account_info_screen/${emailAddress}/${password}")
                     }
                 },
                 modifier = Modifier
