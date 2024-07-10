@@ -18,6 +18,12 @@ mockk = "1.13.11"
 coilCompose = "2.6.0"
 firebaseStorage = "21.0.0"
 androidImageCropper = "4.5.0"
+lifecycleViewmodelKtx = "2.8.3"
+lifecycleViewmodelCompose = "2.8.3"
+lifecycleLivedataKtx = "2.8.3"
+lifecycleRuntimeKtxVersion = "2.8.3"
+lifecycleViewmodelSavedstate = "2.8.3"
+lifecycleCompiler = "2.8.3"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -43,6 +49,12 @@ mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk" }
 coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coilCompose" }
 firebase-storage = { group = "com.google.firebase", name = "firebase-storage", version.ref = "firebaseStorage" }
 android-image-cropper = { group = "com.vanniktech", name = "android-image-cropper", version.ref = "androidImageCropper" }
+androidx-lifecycle-viewmodel-ktx = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version.ref = "lifecycleViewmodelKtx" }
+androidx-lifecycle-viewmodel-compose = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "lifecycleViewmodelCompose" }
+androidx-lifecycle-livedata-ktx = { group = "androidx.lifecycle", name = "lifecycle-livedata-ktx", version.ref = "lifecycleLivedataKtx" }
+lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtxVersion" }
+androidx-lifecycle-viewmodel-savedstate = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-savedstate", version.ref = "lifecycleViewmodelSavedstate" }
+androidx-lifecycle-compiler = { group = "androidx.lifecycle", name = "lifecycle-compiler", version.ref = "lifecycleCompiler" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

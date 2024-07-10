@@ -13,6 +13,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.example.crossloqui.navigation.Screen
 import com.example.crossloqui.navigation.nav_graph.SetupNavGraph
 import com.example.crossloqui.ui.theme.CrossLoquiTheme
 import com.google.firebase.auth.FirebaseAuth
@@ -37,12 +38,22 @@ class MainActivity : ComponentActivity() {
                     navController = rememberNavController()
 
                     // Check if user is signed in (non-null)
-                    /*val currentUser = auth.currentUser
+                    val currentUser = auth.currentUser
                     if (currentUser != null) {
-                        reload()
-                    }*/
+                        SetupNavGraph(
+                            navController = navController,
+                            auth = auth,
+                            startScreen = Screen.Home.route
+                        )
+                    } else {
+                        SetupNavGraph(
+                            navController = navController,
+                            auth = auth,
+                            startScreen = Screen.Login.route
+                        )
+                    }
 
-                    SetupNavGraph(navController = navController, auth = auth)
+                    //SetupNavGraph(navController = navController, auth = auth)
                 }
             }
         }

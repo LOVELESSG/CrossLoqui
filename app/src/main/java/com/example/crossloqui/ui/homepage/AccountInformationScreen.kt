@@ -38,6 +38,7 @@ import com.canhub.cropper.CropImageContract
 import com.canhub.cropper.CropImageContractOptions
 import com.canhub.cropper.CropImageOptions
 import com.example.crossloqui.R
+import com.example.crossloqui.data.User
 import com.example.crossloqui.ui.theme.CrossLoquiTheme
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
@@ -168,12 +169,14 @@ fun AccountInformationScreen(
                                             Toast.LENGTH_SHORT
                                         ).show()
                                     }
-                                    val user = hashMapOf(
+                                    /*val user = hashMapOf(
                                         "name" to userName,
                                         //"image" to encodedImage,
                                         "email" to email,
-                                        "bio" to bio
-                                    )
+                                        "bio" to bio,
+                                        "id" to auth.currentUser?.uid
+                                    )*/
+                                    val user = User(userName, email, bio, auth.currentUser?.uid)
                                     db.collection("users")
                                         .add(user)
                                     navController.navigate("home_screen")

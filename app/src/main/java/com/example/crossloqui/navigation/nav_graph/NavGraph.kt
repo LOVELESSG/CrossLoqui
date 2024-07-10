@@ -17,11 +17,13 @@ import com.google.firebase.auth.FirebaseAuth
 @Composable
 fun SetupNavGraph(
     navController: NavHostController,
-    auth: FirebaseAuth
+    auth: FirebaseAuth,
+    startScreen: String
 ) {
     NavHost(
         navController = navController,
-        startDestination = Screen.Login.route
+        startDestination = startScreen
+        //startDestination = Screen.Login.route
     ) {
         composable(
             route = Screen.Home.route
