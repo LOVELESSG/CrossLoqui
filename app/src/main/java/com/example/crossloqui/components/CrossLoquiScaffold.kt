@@ -12,9 +12,9 @@ import androidx.navigation.NavController
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CrossLoquiScaffold(navController: NavController, content: @Composable (PaddingValues) -> Unit){
+fun CrossLoquiScaffold(title:String, navController: NavController, content: @Composable (PaddingValues) -> Unit){
     Scaffold(
-        topBar = { CrossLoquiAppBar(title = { Text(text = "Message") }) },
+        topBar = { CrossLoquiAppBar(title = { Text(text = title) }) },
         bottomBar = { CrossLoquiNavigationBar(navController) },
         modifier = Modifier.fillMaxSize(),
         content = content

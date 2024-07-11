@@ -1,15 +1,100 @@
 package com.example.crossloqui.ui.contact
 
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.example.crossloqui.R
+import com.example.crossloqui.components.CrossLoquiScaffold
+import com.example.crossloqui.data.User
 import com.example.crossloqui.ui.theme.CrossLoquiTheme
 
 @Composable
 fun ContactScreen(
     navController: NavController
 ) {
+    val sampleContacts = mutableListOf(
+        User("Cindy", "cindy@gmail.com", "I'm Cindy", "24fgerg", 123321, 2331234),
+        User("Jack", "jack@gmail.com", "good", "24fgerg", 124521, 8733134),
+        User("White", "w@gmail.com", "what happen?", "24fgerg", 123, 3434),
+        User("Rose", "rose@gmail.com", "see you", "24fgerg", 123321, 1234),
+        User("Singer", "sing@gmail.com", "a test to test a very very long bio and hope it will be fold into one line and be shown in a correct way like what we supposed", "24fgerg", 1231, 34),
+        User("Youtube official", "you@tube.com", "happy happy happy", "24fgerg", 123321, 23),
+        User("W!!!", "dfbgtrio@gmail.com", "??????", "24fgerg", 1673321, 21234),
+        User("Cool", "cool@cool.com", "cool", "24fgerg", 3321, 234),
+        )
+    CrossLoquiScaffold(title = "Contacts", navController = navController) { paddingValues ->
+        //Text(modifier = Modifier.padding(paddingValues), text = "this is the contacts screen")
+        //获取朋友列表
+        //遍历列表
+        //项目.名称, 项目.bio, 项目.头像 = 列表项
+        LazyColumn(
+            modifier = Modifier.padding(paddingValues)
+        ) {
+            items(sampleContacts.size){item ->
+                ContactItem(name = sampleContacts[item].name, bio = sampleContacts[item].bio)
+                ContactItem(name = sampleContacts[item].name, bio = sampleContacts[item].bio)
+                ContactItem(name = sampleContacts[item].name, bio = sampleContacts[item].bio)
+            }
+        }
+        /*Column(modifier = Modifier.padding(paddingValues)) {
+            ContactItem(name = sampleContacts[0].name, bio = "Hello Android")
+        }*/
+    }
+}
+
+@Composable
+fun ContactItem(
+    name: String,
+    bio: String,
+    painter: Painter = painterResource(id = R.drawable.baseline_person_24)
+) {
+    Row(
+        modifier = Modifier.height(intrinsicSize = IntrinsicSize.Min)
+    ) {
+        Image(
+            painter = painter,
+            contentDescription = "",
+            modifier = Modifier
+                .clip(CircleShape)
+                .size(60.dp)
+        )
+
+        Column(
+            verticalArrangement = Arrangement.Center,
+            modifier = Modifier.fillMaxHeight()
+        ) {
+            Text(
+                style = MaterialTheme.typography.titleLarge,
+                text = name
+            )
+            Text(
+                maxLines = 1,
+                style = MaterialTheme.typography.bodyLarge,
+                text = bio
+            )
+        }
+    }
 }
 
 @Preview(showSystemUi = true)
@@ -17,5 +102,13 @@ fun ContactScreen(
 fun ContactScreenPreview() {
     CrossLoquiTheme {
         ContactScreen(navController = rememberNavController())
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun ContactItemPreview() {
+    CrossLoquiTheme {
+        ContactItem(name = "Jack", bio = "Hello Android!")
     }
 }

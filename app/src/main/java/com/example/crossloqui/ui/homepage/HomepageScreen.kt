@@ -30,9 +30,9 @@ fun HomepageScreen(
             text = "Hello Android!"
         )
     }*/
-    CrossLoquiScaffold(navController = navController) {PaddingValues ->
+    CrossLoquiScaffold(title = "Message", navController = navController) {paddingValues ->
         Text(
-            modifier = Modifier.padding(PaddingValues),
+            modifier = Modifier.padding(paddingValues),
             text = "Hello Android!"
         )
     }

@@ -176,7 +176,14 @@ fun AccountInformationScreen(
                                         "bio" to bio,
                                         "id" to auth.currentUser?.uid
                                     )*/
-                                    val user = User(userName, email, bio, auth.currentUser?.uid)
+                                    val user = User(
+                                        name = userName,
+                                        email = email,
+                                        bio = bio,
+                                        id = auth.currentUser?.uid,
+                                        followingCount = 0,
+                                        followerCount = 0
+                                    )
                                     db.collection("users")
                                         .add(user)
                                     navController.navigate("home_screen")

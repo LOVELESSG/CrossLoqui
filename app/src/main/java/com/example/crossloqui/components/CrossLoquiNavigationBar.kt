@@ -1,5 +1,6 @@
 package com.example.crossloqui.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.IntrinsicSize
@@ -31,6 +32,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -42,16 +44,18 @@ import com.example.crossloqui.ui.theme.CrossLoquiTheme
 @Composable
 fun CrossLoquiNavigationBar(
     navController: NavController
-){
+) {
     val selectedItem = remember {
         mutableStateOf(NAVIGATION_ITEMS[0])
     }
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center,
-        modifier = Modifier.padding(16.dp)
+        modifier = Modifier
+            .background(Color.Transparent)
+            .padding(16.dp, 0.dp, 16.dp, 16.dp)
     ) {
-        NavigationBar (
+        NavigationBar(
             modifier = Modifier
                 .fillMaxWidth()
                 .weight(4f)
@@ -64,8 +68,9 @@ fun CrossLoquiNavigationBar(
                     onClick = {
                         selectedItem.value = item
                         navController.navigate(route = item.route)
-                              },
-                    icon = { Icon(imageVector = item.icon, contentDescription = item.name) })
+                    },
+                    icon = { Icon(imageVector = item.icon, contentDescription = item.name) }
+                )
             }
         }
         Box(
