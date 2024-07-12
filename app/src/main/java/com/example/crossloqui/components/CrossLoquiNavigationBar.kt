@@ -49,8 +49,8 @@ fun CrossLoquiNavigationBar(
         mutableStateOf(NAVIGATION_ITEMS[0])
     }
     Row(
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Center,
+        //verticalAlignment = Alignment.CenterVertically,
+        //horizontalArrangement = Arrangement.Center,
         modifier = Modifier
             .background(Color.Transparent)
             .padding(16.dp, 0.dp, 16.dp, 16.dp)
@@ -89,7 +89,7 @@ fun CrossLoquiNavigationBar(
     }
 }
 
-@Preview(showSystemUi = true)
+@Preview(showSystemUi = false)
 @Composable
 fun CrossLoquiNavigationBarPreview() {
     CrossLoquiTheme {

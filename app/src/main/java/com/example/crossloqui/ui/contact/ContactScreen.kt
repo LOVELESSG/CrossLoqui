@@ -1,12 +1,17 @@
 package com.example.crossloqui.ui.contact
 
+import android.content.res.Configuration
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -16,10 +21,12 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -43,21 +50,24 @@ fun ContactScreen(
         User("W!!!", "dfbgtrio@gmail.com", "??????", "24fgerg", 1673321, 21234),
         User("Cool", "cool@cool.com", "cool", "24fgerg", 3321, 234),
         )
+    val sortedItems = sampleContacts.sortedBy { it.name }
     CrossLoquiScaffold(title = "Contacts", navController = navController) { paddingValues ->
         //Text(modifier = Modifier.padding(paddingValues), text = "this is the contacts screen")
         //获取朋友列表
         //遍历列表
         //项目.名称, 项目.bio, 项目.头像 = 列表项
         LazyColumn(
-            modifier = Modifier.padding(paddingValues)
+            modifier = Modifier
+                .padding(top = paddingValues.calculateTopPadding())
+                //.padding(16.dp, 0.dp, 16.dp, 8.dp)
         ) {
-            items(sampleContacts.size){item ->
-                ContactItem(name = sampleContacts[item].name, bio = sampleContacts[item].bio)
-                ContactItem(name = sampleContacts[item].name, bio = sampleContacts[item].bio)
-                ContactItem(name = sampleContacts[item].name, bio = sampleContacts[item].bio)
+            items(sortedItems.size){item ->
+                ContactItem(name = sortedItems[item].name, bio = sortedItems[item].bio)
+                ContactItem(name = sortedItems[item].name, bio = sortedItems[item].bio)
+                ContactItem(name = sortedItems[item].name, bio = sortedItems[item].bio)
             }
         }
-        /*Column(modifier = Modifier.padding(paddingValues)) {
+        /*Column(modifier = Modifier.padding()) {
             ContactItem(name = sampleContacts[0].name, bio = "Hello Android")
         }*/
     }
@@ -70,27 +80,39 @@ fun ContactItem(
     painter: Painter = painterResource(id = R.drawable.baseline_person_24)
 ) {
     Row(
-        modifier = Modifier.height(intrinsicSize = IntrinsicSize.Min)
+        modifier = Modifier
+            .height(intrinsicSize = IntrinsicSize.Min)
+            .fillMaxWidth()
+            .padding(16.dp, 8.dp, 16.dp, 0.dp)
     ) {
-        Image(
-            painter = painter,
-            contentDescription = "",
-            modifier = Modifier
-                .clip(CircleShape)
-                .size(60.dp)
-        )
+        Box(modifier = Modifier.padding(0.dp, 8.dp)) {
+            Image(
+                painter = painter,
+                contentDescription = "",
+                modifier = Modifier
+                    .clip(CircleShape)
+                    .size(40.dp)
+                    .background(MaterialTheme.colorScheme.primaryContainer),
+            )
+        }
+
 
         Column(
             verticalArrangement = Arrangement.Center,
-            modifier = Modifier.fillMaxHeight()
+            modifier = Modifier
+                .fillMaxHeight()
+                .padding(start = 16.dp)
         ) {
             Text(
                 style = MaterialTheme.typography.titleLarge,
+                color = MaterialTheme.colorScheme.onSurface,
                 text = name
             )
             Text(
                 maxLines = 1,
                 style = MaterialTheme.typography.bodyLarge,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                overflow = TextOverflow.Ellipsis,
                 text = bio
             )
         }
@@ -100,6 +122,14 @@ fun ContactItem(
 @Preview(showSystemUi = true)
 @Composable
 fun ContactScreenPreview() {
+    CrossLoquiTheme {
+        ContactScreen(navController = rememberNavController())
+    }
+}
+
+@Preview(showSystemUi = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+fun ContactScreenDarkModePreview() {
     CrossLoquiTheme {
         ContactScreen(navController = rememberNavController())
     }
