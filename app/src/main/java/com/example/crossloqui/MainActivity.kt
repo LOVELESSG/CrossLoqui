@@ -13,6 +13,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.example.crossloqui.components.CrossLoquiScaffold
 import com.example.crossloqui.navigation.Screen
 import com.example.crossloqui.navigation.nav_graph.SetupNavGraph
 import com.example.crossloqui.ui.theme.CrossLoquiTheme
@@ -52,8 +53,6 @@ class MainActivity : ComponentActivity() {
                             startScreen = Screen.Login.route
                         )
                     }
-
-                    //SetupNavGraph(navController = navController, auth = auth)
                 }
             }
         }

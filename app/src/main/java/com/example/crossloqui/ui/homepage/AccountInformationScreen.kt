@@ -169,13 +169,6 @@ fun AccountInformationScreen(
                                             Toast.LENGTH_SHORT
                                         ).show()
                                     }
-                                    /*val user = hashMapOf(
-                                        "name" to userName,
-                                        //"image" to encodedImage,
-                                        "email" to email,
-                                        "bio" to bio,
-                                        "id" to auth.currentUser?.uid
-                                    )*/
                                     val user = User(
                                         name = userName,
                                         email = email,
@@ -222,8 +215,9 @@ fun AccountInformationScreen(
 @Preview(showSystemUi = true)
 @Composable
 fun AccountInformationScreenPreview() {
-    val fakeFirebaseAuth = mockk<FirebaseAuth>()
+
     CrossLoquiTheme {
+        val fakeFirebaseAuth = mockk<FirebaseAuth>()
         AccountInformationScreen(
             navController = rememberNavController(),
             fakeFirebaseAuth,

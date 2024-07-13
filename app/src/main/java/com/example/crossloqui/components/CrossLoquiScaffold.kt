@@ -12,14 +12,23 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavController
+import com.example.crossloqui.navigation.Screen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CrossLoquiScaffold(title:String, navController: NavController, content: @Composable (PaddingValues) -> Unit){
+    val currentDestination = navController.currentDestination?.route
+    var titleName = ""
+    if (currentDestination.equals(Screen.Home.route))
+        titleName = "Message"
+    else if (currentDestination.equals(Screen.Post.route))
+        titleName = "Post"
+    else
+        titleName = "Contacts"
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         //containerColor = Color.Transparent,
-        topBar = { CrossLoquiAppBar(title = { Text(text = title) }) },
+        topBar = { CrossLoquiAppBar(title = { Text(text = titleName) }) },
         bottomBar = { CrossLoquiNavigationBar(navController) },
         content = content
     )

@@ -26,6 +26,7 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -37,6 +38,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.crossloqui.data.NAVIGATION_ITEMS
 import com.example.crossloqui.ui.theme.CrossLoquiTheme
@@ -45,12 +47,10 @@ import com.example.crossloqui.ui.theme.CrossLoquiTheme
 fun CrossLoquiNavigationBar(
     navController: NavController
 ) {
-    val selectedItem = remember {
-        mutableStateOf(NAVIGATION_ITEMS[0])
-    }
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentDestination = navBackStackEntry?.destination
+    var currentSelected = currentDestination?.route
     Row(
-        //verticalAlignment = Alignment.CenterVertically,
-        //horizontalArrangement = Arrangement.Center,
         modifier = Modifier
             .background(Color.Transparent)
             .padding(16.dp, 0.dp, 16.dp, 16.dp)
@@ -62,12 +62,12 @@ fun CrossLoquiNavigationBar(
                 .clip(RoundedCornerShape(16.dp))
                 .height(56.dp)
         ) {
-            NAVIGATION_ITEMS.forEach { item ->
+            NAVIGATION_ITEMS.forEachIndexed {index, item ->
                 NavigationBarItem(
-                    selected = item == selectedItem.value,
+                    selected = currentSelected == item.route,
                     onClick = {
-                        selectedItem.value = item
-                        navController.navigate(route = item.route)
+                        currentSelected = item.route
+                        navController.navigate(route = item.route) { launchSingleTop = true }
                     },
                     icon = { Icon(imageVector = item.icon, contentDescription = item.name) }
                 )
