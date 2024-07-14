@@ -1,6 +1,8 @@
 package com.example.crossloqui.ui.contact
 
+import android.app.Activity
 import android.content.res.Configuration
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -26,6 +28,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -83,6 +86,8 @@ fun ContactItem(
     bio: String,
     painter: Painter = painterResource(id = R.drawable.baseline_person_24)
 ) {
+    val activity = (LocalContext.current as? Activity)
+
     Row(
         modifier = Modifier
             .height(intrinsicSize = IntrinsicSize.Min)
@@ -120,6 +125,10 @@ fun ContactItem(
                 text = bio
             )
         }
+    }
+
+    BackHandler {
+        activity?.finish()
     }
 }
 

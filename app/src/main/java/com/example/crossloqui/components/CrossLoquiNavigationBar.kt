@@ -1,5 +1,6 @@
 package com.example.crossloqui.components
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -41,6 +42,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.crossloqui.data.NAVIGATION_ITEMS
+import com.example.crossloqui.navigation.Screen
 import com.example.crossloqui.ui.theme.CrossLoquiTheme
 
 @Composable
@@ -62,12 +64,15 @@ fun CrossLoquiNavigationBar(
                 .clip(RoundedCornerShape(16.dp))
                 .height(56.dp)
         ) {
-            NAVIGATION_ITEMS.forEachIndexed {index, item ->
+            NAVIGATION_ITEMS.forEachIndexed { index, item ->
                 NavigationBarItem(
                     selected = currentSelected == item.route,
                     onClick = {
                         currentSelected = item.route
-                        navController.navigate(route = item.route) { launchSingleTop = true }
+                        navController.navigate(route = item.route) {
+                            //popUpTo(Screen.Home.route)
+                            launchSingleTop = true
+                        }
                     },
                     icon = { Icon(imageVector = item.icon, contentDescription = item.name) }
                 )
