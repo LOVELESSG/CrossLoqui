@@ -5,7 +5,9 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.crossloqui.navigation.Screen
+import com.example.crossloqui.ui.contact.ContactDetailScreen
 import com.example.crossloqui.ui.contact.ContactScreen
+import com.example.crossloqui.ui.contact.UserDetailScreen
 import com.example.crossloqui.ui.conversation.ConversationScreen
 import com.example.crossloqui.ui.homepage.AccountInformationScreen
 import com.example.crossloqui.ui.homepage.HomepageScreen
@@ -70,6 +72,16 @@ fun SetupNavGraph(
                 email = email!!,
                 password = password!!
             )
+        }
+        composable(
+            route = Screen.ContactDetail.route
+        ) {
+            ContactDetailScreen(navController = navController)
+        }
+        composable(
+            route = Screen.UserDetail.route
+        ) {
+            UserDetailScreen(navController = navController)
         }
     }
 }

@@ -5,6 +5,7 @@ import android.content.res.Configuration
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -38,6 +39,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.crossloqui.R
 import com.example.crossloqui.components.CrossLoquiScaffold
 import com.example.crossloqui.data.User
+import com.example.crossloqui.navigation.Screen
 import com.example.crossloqui.ui.theme.CrossLoquiTheme
 
 @Composable
@@ -66,9 +68,9 @@ fun ContactScreen(
                 //.padding(16.dp, 0.dp, 16.dp, 8.dp)
         ) {
             items(sortedItems.size){item ->
-                ContactItem(name = sortedItems[item].name, bio = sortedItems[item].bio)
-                ContactItem(name = sortedItems[item].name, bio = sortedItems[item].bio)
-                ContactItem(name = sortedItems[item].name, bio = sortedItems[item].bio)
+                ContactItem(name = sortedItems[item].name, bio = sortedItems[item].bio, navController = navController)
+                ContactItem(name = sortedItems[item].name, bio = sortedItems[item].bio, navController = navController)
+                ContactItem(name = sortedItems[item].name, bio = sortedItems[item].bio, navController = navController)
             }
             item {
                 Spacer(modifier = Modifier.height(paddingValues.calculateBottomPadding()))
@@ -84,6 +86,7 @@ fun ContactScreen(
 fun ContactItem(
     name: String,
     bio: String,
+    navController: NavController,
     painter: Painter = painterResource(id = R.drawable.baseline_person_24)
 ) {
     val activity = (LocalContext.current as? Activity)
@@ -93,6 +96,9 @@ fun ContactItem(
             .height(intrinsicSize = IntrinsicSize.Min)
             .fillMaxWidth()
             .padding(16.dp, 8.dp, 16.dp, 0.dp)
+            .clickable(onClick = {
+                navController.navigate(route = Screen.ContactDetail.route)
+            })
     ) {
         Box(modifier = Modifier.padding(0.dp, 8.dp)) {
             Image(
@@ -152,6 +158,6 @@ fun ContactScreenDarkModePreview() {
 @Composable
 fun ContactItemPreview() {
     CrossLoquiTheme {
-        ContactItem(name = "Jack", bio = "Hello Android!")
+        ContactItem(name = "Jack", bio = "Hello Android!", navController = rememberNavController())
     }
 }

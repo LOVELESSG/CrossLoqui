@@ -60,7 +60,7 @@ fun ContactDetailContent(
     painter: Painter = painterResource(id = R.drawable.baseline_person_24)
 ) {
     var informationExpanded by remember {
-        mutableStateOf(true)
+        mutableStateOf(false)
     }
 
     LazyColumn(modifier = Modifier.padding(paddingValues = paddingValues)) {
@@ -209,7 +209,7 @@ fun ContactDetailContent(
                         Icon(
                             imageVector = Icons.Filled.ExpandLess,
                             contentDescription = "Show more information",
-                            modifier = Modifier.padding(16.dp)
+                            modifier = Modifier.padding(end = 16.dp, top = 16.dp)
                         )
                     }
                     Column {
@@ -280,7 +280,7 @@ fun ContactDetailContent(
                         Icon(
                             imageVector = Icons.Filled.ExpandMore,
                             contentDescription = "Show more information",
-                            modifier = Modifier.padding(16.dp)
+                            modifier = Modifier.padding(end = 16.dp)
                         )
                     }
                 }
