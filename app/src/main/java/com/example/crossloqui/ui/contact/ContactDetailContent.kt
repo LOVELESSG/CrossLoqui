@@ -1,5 +1,9 @@
 package com.example.crossloqui.ui.contact
 
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.LinearOutSlowInEasing
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -42,6 +46,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.res.painterResource
@@ -59,9 +64,6 @@ fun ContactDetailContent(
     isFriend: Boolean,
     painter: Painter = painterResource(id = R.drawable.baseline_person_24)
 ) {
-    var informationExpanded by remember {
-        mutableStateOf(false)
-    }
 
     LazyColumn(modifier = Modifier.padding(paddingValues = paddingValues)) {
         item {
@@ -191,100 +193,7 @@ fun ContactDetailContent(
                 }
             }
 
-
-            if (informationExpanded) {
-                Card(
-                    onClick = { informationExpanded = !informationExpanded },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp, 8.dp)
-                ) {
-                    Row {
-                        Text(
-                            text = "Information",
-                            modifier = Modifier
-                                .padding(16.dp, 16.dp, 16.dp, 8.dp)
-                                .weight(1f)
-                        )
-                        Icon(
-                            imageVector = Icons.Filled.ExpandLess,
-                            contentDescription = "Show more information",
-                            modifier = Modifier.padding(end = 16.dp, top = 16.dp)
-                        )
-                    }
-                    Column {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier
-                                .padding(16.dp, 8.dp, 16.dp, 16.dp)
-                        ) {
-                            Icon(imageVector = Icons.Filled.Cake, contentDescription = "Birthday")
-                            Spacer(modifier = Modifier.width(8.dp))
-                            Text(text = "1999/09/13")
-                        }
-                        if ("male" == "male"){
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                modifier = Modifier
-                                    .padding(16.dp, 8.dp, 16.dp, 16.dp)
-                            ) {
-                                Icon(imageVector = Icons.Filled.Male, contentDescription = "Male")
-                                Spacer(modifier = Modifier.width(8.dp))
-                                Text(text = "Male")
-                            }
-                        } else {
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                modifier = Modifier
-                                    .padding(16.dp, 8.dp, 16.dp, 16.dp)
-                            ) {
-                                Icon(imageVector = Icons.Filled.Female, contentDescription = "Female")
-                                Spacer(modifier = Modifier.width(8.dp))
-                                Text(text = "Female")
-                            }
-                        }
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier
-                                .padding(16.dp, 8.dp, 16.dp, 16.dp)
-                        ) {
-                            Icon(imageVector = Icons.Filled.AlternateEmail, contentDescription = "Birthday")
-                            Spacer(modifier = Modifier.width(8.dp))
-                            Text(text = "Jack@mail.com")
-                        }
-                    }
-                }
-            } else {
-                Card(
-                    onClick = { informationExpanded = !informationExpanded },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp, 8.dp)
-                ) {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Column(modifier = Modifier.weight(1f)) {
-                            Text(
-                                text = "Information",
-                                modifier = Modifier.padding(16.dp, 16.dp, 16.dp, 8.dp)
-                            )
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                modifier = Modifier
-                                    .padding(16.dp, 8.dp, 16.dp, 16.dp)
-                            ) {
-                                Icon(imageVector = Icons.Filled.Cake, contentDescription = "Birthday")
-                                Spacer(modifier = Modifier.width(8.dp))
-                                Text(text = "1999/09/13")
-                            }
-                        }
-                        Icon(
-                            imageVector = Icons.Filled.ExpandMore,
-                            contentDescription = "Show more information",
-                            modifier = Modifier.padding(end = 16.dp)
-                        )
-                    }
-                }
-            }
+            ExpandableCard(birthday = "1999/09/13", gender = "Male", email = "Jack@mail.com")
 
             Divider(modifier = Modifier.padding(0.dp, 8.dp))
 
@@ -305,6 +214,85 @@ fun ContactDetailContent(
                 onClick = {}
             ) {
                 Text(text = "A Post", modifier = Modifier.padding(16.dp))
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun ExpandableCard(birthday: String, gender: String, email: String) {
+    var informationExpanded by remember {
+        mutableStateOf(false)
+    }
+    val rotationState by animateFloatAsState(targetValue = if (informationExpanded) 180f else 0f)
+
+    Card(
+        onClick = { informationExpanded = !informationExpanded },
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp, 8.dp)
+            .animateContentSize(
+                animationSpec = tween(
+                    durationMillis = 300,
+                    easing = LinearOutSlowInEasing
+                )
+            )
+    ) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = "Information",
+                    modifier = Modifier.padding(16.dp, 16.dp, 16.dp, 8.dp)
+                )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .padding(16.dp, 8.dp, 16.dp, 16.dp)
+                ) {
+                    Icon(imageVector = Icons.Filled.Cake, contentDescription = "Birthday")
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(text = birthday)
+                }
+            }
+            Icon(
+                imageVector = Icons.Filled.ExpandMore,
+                contentDescription = "Show more information",
+                modifier = Modifier
+                    .padding(end = 16.dp)
+                    .rotate(rotationState)
+            )
+        }
+        if (informationExpanded) {
+            if ("male" == "male"){
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .padding(16.dp, 8.dp, 16.dp, 16.dp)
+                ) {
+                    Icon(imageVector = Icons.Filled.Male, contentDescription = "Male")
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(text = gender)
+                }
+            } else {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .padding(16.dp, 8.dp, 16.dp, 16.dp)
+                ) {
+                    Icon(imageVector = Icons.Filled.Female, contentDescription = "Female")
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(text = gender)
+                }
+            }
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .padding(16.dp, 8.dp, 16.dp, 16.dp)
+            ) {
+                Icon(imageVector = Icons.Filled.AlternateEmail, contentDescription = "Email")
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(text = email)
             }
         }
     }
