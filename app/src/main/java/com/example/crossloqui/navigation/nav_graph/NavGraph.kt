@@ -8,6 +8,7 @@ import com.example.crossloqui.navigation.Screen
 import com.example.crossloqui.ui.contact.ContactDetailScreen
 import com.example.crossloqui.ui.contact.ContactScreen
 import com.example.crossloqui.ui.contact.UserDetailScreen
+import com.example.crossloqui.ui.contact.UserSearchScreen
 import com.example.crossloqui.ui.conversation.ConversationScreen
 import com.example.crossloqui.ui.homepage.AccountInformationScreen
 import com.example.crossloqui.ui.homepage.HomepageScreen
@@ -82,6 +83,11 @@ fun SetupNavGraph(
             route = Screen.UserDetail.route
         ) {
             UserDetailScreen(navController = navController)
+        }
+        composable(
+            route = Screen.UserSearchScreen.route
+        ) {
+            UserSearchScreen(navController = navController)
         }
     }
 }

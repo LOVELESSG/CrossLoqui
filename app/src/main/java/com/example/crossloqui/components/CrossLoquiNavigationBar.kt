@@ -21,6 +21,7 @@ import androidx.compose.material.icons.filled.Contacts
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.GroupWork
 import androidx.compose.material.icons.filled.MoreHoriz
+import androidx.compose.material.icons.filled.PersonAdd
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
@@ -35,6 +36,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -47,6 +49,8 @@ import com.example.crossloqui.ui.theme.CrossLoquiTheme
 
 @Composable
 fun CrossLoquiNavigationBar(
+    fabIcon: ImageVector,
+    fabTarget: String,
     navController: NavController
 ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -86,9 +90,9 @@ fun CrossLoquiNavigationBar(
         )
         {
             FloatingActionButton(
-                onClick = { /*TODO*/ }
+                onClick = { navController.navigate(route = fabTarget) }
             ) {
-                Icon(Icons.Filled.Add, contentDescription = "Add")
+                Icon(fabIcon, contentDescription = "Add")
             }
         }
     }
@@ -98,6 +102,6 @@ fun CrossLoquiNavigationBar(
 @Composable
 fun CrossLoquiNavigationBarPreview() {
     CrossLoquiTheme {
-        CrossLoquiNavigationBar(rememberNavController())
+        CrossLoquiNavigationBar(Icons.Filled.PersonAdd, "", rememberNavController())
     }
 }
