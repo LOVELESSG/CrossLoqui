@@ -40,25 +40,74 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.example.crossloqui.data.User
+import com.example.crossloqui.navigation.Screen
 import com.example.crossloqui.ui.theme.CrossLoquiTheme
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.firestore.toObjects
+import com.google.firebase.ktx.Firebase
+import io.mockk.mockk
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
-fun UserSearchScreen(navController: NavController) {
+fun UserSearchScreen(auth: FirebaseAuth, navController: NavController) {
     var userId by remember {
         mutableStateOf("")
     }
     var active by remember {
         mutableStateOf(false)
     }
+    var isFriend by remember {
+        mutableStateOf(false)
+    }
+    var hasFollowed: Boolean
     val context = LocalContext.current
+    val db = Firebase.firestore
+    var currentUser: User? = null
 
     SearchBar(
         query = userId,
         onQueryChange = { userId = it },
         onSearch = {
             active = false
-            Toast.makeText(context, "searching $userId", Toast.LENGTH_LONG).show()
+            db.collection("users")
+                .whereEqualTo("id", auth.currentUser?.uid)
+                .get()
+                .addOnSuccessListener { documentSnapshot ->
+                    currentUser = documentSnapshot.toObjects<User>()[0]
+                }
+            db.collection("users").document("${auth.currentUser?.uid}").collection("friends")
+                .whereEqualTo("email", userId)
+                .get()
+                .addOnSuccessListener { documentSnapshot ->
+                    val user = documentSnapshot.toObjects<User>()
+                    val name = user[0].name
+                    val email = user[0].email
+                    isFriend = true
+                    hasFollowed = currentUser?.followingUser?.contains(user[0].id) ?: false
+                    //hasFollowed = user[0].followingUser.contains(user[0].id)
+                    navController.navigate(
+                        route = "${Screen.ContactDetail.route}/${isFriend}/${hasFollowed}"
+                    )
+                }
+            if (!isFriend) {
+                db.collection("users")
+                    .whereEqualTo("email", userId)
+                    .get()
+                    .addOnSuccessListener { documentSnapshot ->
+                        val user = documentSnapshot.toObjects<User>()
+                        hasFollowed = currentUser?.followingUser?.contains(user[0].id) ?: false
+                        navController.navigate(
+                            route = "${Screen.ContactDetail.route}/${isFriend}/${hasFollowed}"
+                        )
+                    }
+                    .addOnFailureListener { exception ->
+                        Toast.makeText(context, "No such user", Toast.LENGTH_LONG).show()
+                    }
+            }
+            //Toast.makeText(context, "searching $userId", Toast.LENGTH_LONG).show()
                    },
         active = active,
         onActiveChange = { active = it },
@@ -91,7 +140,9 @@ fun UserSearchScreen(navController: NavController) {
 @Preview(showSystemUi = true)
 @Composable
 fun UserSearchScreenPreview() {
+    val fakeFirebaseAuth = mockk<FirebaseAuth>()
+
     CrossLoquiTheme {
-        UserSearchScreen(navController = rememberNavController())
+        UserSearchScreen(fakeFirebaseAuth, navController = rememberNavController())
     }
 }

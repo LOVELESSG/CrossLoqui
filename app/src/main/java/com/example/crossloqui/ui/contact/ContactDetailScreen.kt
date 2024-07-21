@@ -64,10 +64,11 @@ import androidx.navigation.compose.rememberNavController
 import com.example.crossloqui.R
 import com.example.crossloqui.components.CrossLoquiAppBar
 import com.example.crossloqui.ui.theme.CrossLoquiTheme
+import com.google.common.primitives.Booleans
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ContactDetailScreen(navController: NavController) {
+fun ContactDetailScreen(isFriend: Boolean, hasFollowed: Boolean, navController: NavController) {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
@@ -86,11 +87,13 @@ fun ContactDetailScreen(navController: NavController) {
                     }
                 },
                 actions = {
-                    IconButton(onClick = { /*TODO*/ }) {
-                        Icon(
-                            imageVector = Icons.Filled.Delete,
-                            contentDescription = "Delete Contacts"
-                        )
+                    if (isFriend) {
+                        IconButton(onClick = { /*TODO*/ }) {
+                            Icon(
+                                imageVector = Icons.Filled.Delete,
+                                contentDescription = "Delete Contacts"
+                            )
+                        }
                     }
                 },
                 scrollBehavior = scrollBehavior
@@ -102,8 +105,8 @@ fun ContactDetailScreen(navController: NavController) {
         ContactDetailContent(
             paddingValues = paddingValues,
             navController = navController,
-            haveFollowed = true,
-            isFriend = true
+            haveFollowed = hasFollowed,
+            isFriend = isFriend
         )
     }
 }
@@ -113,6 +116,6 @@ fun ContactDetailScreen(navController: NavController) {
 @Composable
 fun ContactDetailScreenPreview() {
     CrossLoquiTheme {
-        ContactDetailScreen(navController = rememberNavController())
+        ContactDetailScreen(true, false, navController = rememberNavController())
     }
 }

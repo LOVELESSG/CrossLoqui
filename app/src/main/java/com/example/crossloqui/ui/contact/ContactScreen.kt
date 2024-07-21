@@ -47,14 +47,14 @@ fun ContactScreen(
     navController: NavController
 ) {
     val sampleContacts = mutableListOf(
-        User("Cindy", "cindy@gmail.com", "I'm Cindy", "24fgerg", 123321, 2331234),
-        User("Jack", "jack@gmail.com", "good", "24fgerg", 124521, 8733134),
-        User("White", "w@gmail.com", "what happen?", "24fgerg", 123, 3434),
-        User("Rose", "rose@gmail.com", "see you", "24fgerg", 123321, 1234),
-        User("Singer", "sing@gmail.com", "a test to test a very very long bio and hope it will be fold into one line and be shown in a correct way like what we supposed", "24fgerg", 1231, 34),
-        User("Youtube official", "you@tube.com", "happy happy happy", "24fgerg", 123321, 23),
-        User("W!!!", "dfbgtrio@gmail.com", "??????", "24fgerg", 1673321, 21234),
-        User("Cool", "cool@cool.com", "cool", "24fgerg", 3321, 234),
+        User("Cindy", "cindy@gmail.com", "I'm Cindy", "24fgerg", "Female", "19990909","19990909",123321, 2331234),
+        User("Jack", "jack@gmail.com", "good", "24fgerg", "Female", "19990909","19990909",124521, 8733134),
+        User("White", "w@gmail.com", "what happen?", "24fgerg", "Female", "19990909","19990909",123, 3434),
+        User("Rose", "rose@gmail.com", "see you", "24fgerg", "Female", "19990909","19990909",123321, 1234),
+        User("Singer", "sing@gmail.com", "a test to test a very very long bio and hope it will be fold into one line and be shown in a correct way like what we supposed", "24fgerg", "Female", "19990909","19990909",1231, 34),
+        User("Youtube official", "you@tube.com", "happy happy happy", "24fgerg", "Female", "19990909","19990909",123321, 23),
+        User("W!!!", "dfbgtrio@gmail.com", "??????", "24fgerg", "Male", "19990909","19990909",1673321, 21234),
+        User("Cool", "cool@cool.com", "cool", "24fgerg", "Male", "19990909","19990909",3321, 234),
         )
     val sortedItems = sampleContacts.sortedBy { it.name }
     CrossLoquiScaffold(title = "Contacts", navController = navController) { paddingValues ->

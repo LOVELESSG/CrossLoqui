@@ -7,15 +7,23 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -28,6 +36,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -42,12 +51,16 @@ import com.example.crossloqui.data.User
 import com.example.crossloqui.ui.theme.CrossLoquiTheme
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import io.mockk.mockk
 import java.io.File
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AccountInformationScreen(
     navController: NavController,
@@ -57,6 +70,18 @@ fun AccountInformationScreen(
 ) {
 
     val context = LocalContext.current
+
+    var expanded by remember {
+        mutableStateOf(false)
+    }
+    val genderOptions = listOf("Male", "Female")
+    var selectedGender by remember {
+        mutableStateOf(genderOptions[0])
+    }
+
+    var birthday by remember {
+        mutableStateOf("")
+    }
 
     var userName by remember {
         mutableStateOf("")
@@ -137,6 +162,54 @@ fun AccountInformationScreen(
                     .padding(top = 8.dp)
             )
 
+            Row(
+                modifier = Modifier
+                    .padding(top = 8.dp)
+                    .fillMaxWidth()
+            ) {
+                TextField(
+                    value = birthday,
+                    onValueChange = { birthday = it },
+                    label = { Text(text = "Birthday") },
+                    singleLine = true,
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                    modifier = Modifier.weight(1f)
+                )
+                ExposedDropdownMenuBox(
+                    expanded = expanded,
+                    onExpandedChange = { expanded = it },
+                    modifier = Modifier
+                        .padding(start = 8.dp)
+                        .weight(1f)
+                ) {
+                    TextField(
+                        modifier = Modifier.menuAnchor(),
+                        value = selectedGender,
+                        onValueChange = {},
+                        readOnly = true,
+                        singleLine = true,
+                        label = { Text(text = "Gender") },
+                        trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded =expanded) },
+                        colors = ExposedDropdownMenuDefaults.textFieldColors(),
+                        )
+                    ExposedDropdownMenu(
+                        expanded = expanded,
+                        onDismissRequest = { expanded = false }
+                    ) {
+                        genderOptions.forEach { option ->
+                            DropdownMenuItem(
+                                text = { Text(text = option) },
+                                onClick = {
+                                    selectedGender = option
+                                    expanded = false
+                                },
+                                contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding
+                            )
+                        }
+                    }
+                }
+            }
+
             OutlinedTextField(
                 value = bio,
                 onValueChange = { bio = it },
@@ -149,56 +222,64 @@ fun AccountInformationScreen(
             )
             Button(
                 onClick = {
-                    try {
-                        auth.createUserWithEmailAndPassword(email, password)
-                            .addOnCompleteListener { task ->
-                                if (task.isSuccessful) {
-                                    val file = Uri.fromFile(File(imagePath))
-                                    val avatarRef = storageRef.child("avatars/${auth.currentUser?.uid}")
-                                    val uploadTask = avatarRef.putFile(file)
-                                    uploadTask.addOnFailureListener {
-                                        Toast.makeText(
-                                            context,
-                                            "Upload failed",
-                                            Toast.LENGTH_SHORT
-                                        ).show()
-                                    }.addOnSuccessListener {
-                                        Toast.makeText(
-                                            context,
-                                            "Registration successful",
-                                            Toast.LENGTH_SHORT
-                                        ).show()
-                                    }
-                                    val user = User(
-                                        name = userName,
-                                        email = email,
-                                        bio = bio,
-                                        id = auth.currentUser?.uid,
-                                        followingCount = 0,
-                                        followerCount = 0
-                                    )
-                                    db.collection("users")
-                                        .add(user)
-                                    navController.navigate("home_screen")
-                                } else {
-                                    val e = task.exception
-                                    if (e is FirebaseAuthUserCollisionException) {
-                                        Toast.makeText(
-                                            context,
-                                            "Email address already registered",
-                                            Toast.LENGTH_SHORT
-                                        ).show()
+                    if (isValidBirthdayFormat(inputBirthday = birthday) || birthday == "") {
+                        try {
+                            auth.createUserWithEmailAndPassword(email, password)
+                                .addOnCompleteListener { task ->
+                                    if (task.isSuccessful) {
+                                        val file = Uri.fromFile(File(imagePath))
+                                        val avatarRef = storageRef.child("avatars/${auth.currentUser?.uid}")
+                                        val uploadTask = avatarRef.putFile(file)
+                                        uploadTask.addOnFailureListener {
+                                            Toast.makeText(
+                                                context,
+                                                "Upload failed",
+                                                Toast.LENGTH_SHORT
+                                            ).show()
+                                        }.addOnSuccessListener {
+                                            Toast.makeText(
+                                                context,
+                                                "Registration successful",
+                                                Toast.LENGTH_SHORT
+                                            ).show()
+                                        }
+                                        val user = User(
+                                            name = userName,
+                                            email = email,
+                                            bio = bio,
+                                            id = auth.currentUser?.uid,
+                                            gender = selectedGender,
+                                            birthday = birthday,
+                                            registerDate = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")),
+                                            followingCount = 0,
+                                            followerCount = 0
+                                        )
+                                        db.collection("users")
+                                            .add(user)
+                                        navController.navigate("home_screen")
                                     } else {
-                                        Toast.makeText(
-                                            context,
-                                            "Registration failed",
-                                            Toast.LENGTH_SHORT
-                                        ).show()
+                                        val e = task.exception
+                                        if (e is FirebaseAuthUserCollisionException) {
+                                            Toast.makeText(
+                                                context,
+                                                "Email address already registered",
+                                                Toast.LENGTH_SHORT
+                                            ).show()
+                                        } else {
+                                            Toast.makeText(
+                                                context,
+                                                "Registration failed",
+                                                Toast.LENGTH_SHORT
+                                            ).show()
+                                        }
                                     }
                                 }
-                            }
-                    } catch (_: Exception) {
-                        Toast.makeText(context, "Registration failed", Toast.LENGTH_SHORT).show()
+                        } catch (_: Exception) {
+                            Toast.makeText(context, "Registration failed", Toast.LENGTH_SHORT)
+                                .show()
+                        }
+                    } else {
+                        Toast.makeText(context, "Input correct birthday format like 19701201", Toast.LENGTH_LONG).show()
                     }
                 },
                 modifier = Modifier
@@ -209,6 +290,11 @@ fun AccountInformationScreen(
             }
         }
     }
+}
+
+fun isValidBirthdayFormat(inputBirthday: String): Boolean {
+    val regex = Regex("^\\d{8}$")
+    return regex.matches(inputBirthday)
 }
 
 

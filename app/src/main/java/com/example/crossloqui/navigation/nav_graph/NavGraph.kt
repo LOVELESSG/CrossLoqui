@@ -75,9 +75,11 @@ fun SetupNavGraph(
             )
         }
         composable(
-            route = Screen.ContactDetail.route
+            route = Screen.ContactDetail.route+"/{isFriend}/{hasFollowed}"
         ) {
-            ContactDetailScreen(navController = navController)
+            val isFriend = it.arguments!!.getBoolean("isFriend")
+            val hasFollowed = it.arguments!!.getBoolean("hasFollowed")
+            ContactDetailScreen(isFriend = isFriend, hasFollowed = hasFollowed, navController = navController)
         }
         composable(
             route = Screen.UserDetail.route
@@ -87,7 +89,7 @@ fun SetupNavGraph(
         composable(
             route = Screen.UserSearchScreen.route
         ) {
-            UserSearchScreen(navController = navController)
+            UserSearchScreen(auth = auth, navController = navController)
         }
     }
 }
