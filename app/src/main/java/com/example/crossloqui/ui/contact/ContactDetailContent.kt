@@ -50,6 +50,7 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -189,6 +190,44 @@ fun ContactDetailContent(
                             }
                             Text(text = "follow")
                         }
+                    }
+                }
+            }
+
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp, 8.dp)
+            ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    horizontalArrangement = Arrangement.SpaceEvenly
+                ) {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(
+                            text = "Follower",
+                            style = MaterialTheme.typography.titleLarge
+                        )
+                        Text(
+                            text = "23",
+                            style = MaterialTheme.typography.titleLarge)
+                    }
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(
+                            text = "Following",
+                            style = MaterialTheme.typography.titleLarge
+                        )
+                        Text(
+                            text = "366709",
+                            style = MaterialTheme.typography.titleLarge,
+                            //fontWeight = FontWeight.Bold
+                        )
                     }
                 }
             }
