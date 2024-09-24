@@ -1,5 +1,6 @@
 package com.example.crossloqui.navigation.nav_graph
 
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -77,8 +78,8 @@ fun SetupNavGraph(
         composable(
             route = Screen.ContactDetail.route+"/{isFriend}/{hasFollowed}"
         ) {
-            val isFriend = it.arguments!!.getBoolean("isFriend")
-            val hasFollowed = it.arguments!!.getBoolean("hasFollowed")
+            val isFriend = it.arguments!!.getString("isFriend").toBoolean()
+            val hasFollowed = it.arguments!!.getString("hasFollowed").toBoolean()
             ContactDetailScreen(isFriend = isFriend, hasFollowed = hasFollowed, navController = navController)
         }
         composable(

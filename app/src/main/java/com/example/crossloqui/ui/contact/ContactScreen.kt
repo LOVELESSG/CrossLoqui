@@ -97,7 +97,7 @@ fun ContactItem(
             .fillMaxWidth()
             .padding(16.dp, 8.dp, 16.dp, 0.dp)
             .clickable(onClick = {
-                navController.navigate(route = Screen.ContactDetail.route)
+                navController.navigate("${Screen.ContactDetail.route}/${true}/${false}")
             })
     ) {
         Box(modifier = Modifier.padding(0.dp, 8.dp)) {
