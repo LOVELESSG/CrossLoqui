@@ -12,4 +12,6 @@ data class User (
     val followerCount: Int,
     val followingUser: MutableList<String> = mutableListOf(),
     val followerUser: MutableList<String> = mutableListOf()
-)
+) {
+    constructor() : this("","", "",null,"","","",0,0)
+}

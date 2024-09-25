@@ -100,17 +100,17 @@ fun UserSearchScreen(auth: FirebaseAuth, navController: NavController) {
                     .whereEqualTo("email", userId)
                     .get()
                     .addOnSuccessListener { documentSnapshot ->
-                        val user = documentSnapshot.toObjects<User>()
-                        hasFollowed = currentUser?.followingUser?.contains(user[0].id) ?: false
-                        navController.navigate(
-                            route = "${Screen.ContactDetail.route}/${isFriend}/${hasFollowed}"
-                        )
-                    }
-                    .addOnFailureListener { exception ->
-                        Toast.makeText(context, "No such user", Toast.LENGTH_LONG).show()
+                        if (documentSnapshot.isEmpty) {
+                            Toast.makeText(context, "No such user", Toast.LENGTH_LONG).show()
+                        } else {
+                            val user = documentSnapshot.toObjects<User>()
+                            hasFollowed = currentUser?.followingUser?.contains(user[0].id) ?: false
+                            navController.navigate(
+                                route = "${Screen.ContactDetail.route}/${isFriend}/${!hasFollowed}"
+                            )
+                        }
                     }
             }
-            //Toast.makeText(context, "searching $userId", Toast.LENGTH_LONG).show()
                    },
         active = active,
         onActiveChange = { active = it },
