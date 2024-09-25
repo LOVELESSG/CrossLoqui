@@ -75,7 +75,7 @@ fun ContactDetailContent(
                     .padding(0.dp, 8.dp)
             ) {
                 Image(
-                    // Should get the contacts avatar according to the userId
+                    //TODO Should get the contacts' avatar according to the userId
                     painter = painter,
                     contentDescription = "",
                     modifier = Modifier
@@ -86,6 +86,7 @@ fun ContactDetailContent(
             }
 
             Text(
+                //TODO get the contacts' name according to the userId
                 text = "Jack",
                 modifier = Modifier
                     .padding(0.dp, 8.dp)
@@ -108,7 +109,7 @@ fun ContactDetailContent(
                             colors = IconButtonDefaults.iconButtonColors(
                                 containerColor = MaterialTheme.colorScheme.primaryContainer
                             ),
-                            onClick = { /*TODO*/ }
+                            onClick = { /*TODO start a chat*/ }
                         ) {
                             Icon(imageVector = Icons.Filled.Textsms, contentDescription = "Start chatting")
                         }
@@ -121,7 +122,7 @@ fun ContactDetailContent(
                                 colors = IconButtonDefaults.iconButtonColors(
                                     containerColor = MaterialTheme.colorScheme.primaryContainer
                                 ),
-                                onClick = { /*TODO*/ },
+                                onClick = { /*TODO stop following the user*/ },
                             ) {
                                 Icon(imageVector = Icons.Filled.Favorite, contentDescription = "Follow")
                             }
@@ -134,7 +135,7 @@ fun ContactDetailContent(
                                 colors = IconButtonDefaults.iconButtonColors(
                                     containerColor = MaterialTheme.colorScheme.primaryContainer
                                 ),
-                                onClick = { /*TODO*/ }
+                                onClick = { /*TODO follow the user*/ }
                             ) {
                                 Icon(imageVector = Icons.Filled.FavoriteBorder, contentDescription = "Stop following")
                             }
@@ -155,7 +156,7 @@ fun ContactDetailContent(
                             colors = IconButtonDefaults.iconButtonColors(
                                 containerColor = MaterialTheme.colorScheme.primaryContainer
                             ),
-                            onClick = { /*TODO*/ }
+                            onClick = { /*TODO add friend(send request)*/ }
                         ) {
                             Icon(
                                 imageVector = Icons.Filled.PersonAdd,
@@ -171,7 +172,7 @@ fun ContactDetailContent(
                                 colors = IconButtonDefaults.iconButtonColors(
                                     containerColor = MaterialTheme.colorScheme.primaryContainer
                                 ),
-                                onClick = { /*TODO*/ },
+                                onClick = { /*TODO stop following the user*/ },
                             ) {
                                 Icon(imageVector = Icons.Filled.Favorite, contentDescription = "Follow")
                             }
@@ -184,7 +185,7 @@ fun ContactDetailContent(
                                 colors = IconButtonDefaults.iconButtonColors(
                                     containerColor = MaterialTheme.colorScheme.primaryContainer
                                 ),
-                                onClick = { /*TODO*/ }
+                                onClick = { /*TODO follow the user*/ }
                             ) {
                                 Icon(imageVector = Icons.Filled.FavoriteBorder, contentDescription = "Stop following")
                             }
@@ -213,6 +214,7 @@ fun ContactDetailContent(
                             style = MaterialTheme.typography.titleLarge
                         )
                         Text(
+                            //TODO get the number of people that this user has followed according to userId
                             text = "23",
                             style = MaterialTheme.typography.titleLarge)
                     }
@@ -224,6 +226,7 @@ fun ContactDetailContent(
                             style = MaterialTheme.typography.titleLarge
                         )
                         Text(
+                            //TODO get the number of followers of this user according to the userId
                             text = "366709",
                             style = MaterialTheme.typography.titleLarge,
                             //fontWeight = FontWeight.Bold
@@ -232,6 +235,7 @@ fun ContactDetailContent(
                 }
             }
 
+            //TODO get the basic information of this user according to the userId
             ExpandableCard(birthday = "1999/09/13", gender = "Male", email = "Jack@mail.com")
 
             Divider(modifier = Modifier.padding(0.dp, 8.dp))
@@ -243,7 +247,7 @@ fun ContactDetailContent(
             )
         }
 
-        // Need to show the recent post
+        //TODO Need to show the recent post
         items(9) {
             Card(
                 modifier = Modifier
