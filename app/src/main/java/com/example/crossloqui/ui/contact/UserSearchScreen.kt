@@ -72,12 +72,14 @@ fun UserSearchScreen(auth: FirebaseAuth, navController: NavController) {
         onQueryChange = { userId = it },
         onSearch = {
             active = false
+            // Get currentUser
             db.collection("users")
                 .whereEqualTo("id", auth.currentUser?.uid)
                 .get()
                 .addOnSuccessListener { documentSnapshot ->
                     currentUser = documentSnapshot.toObjects<User>()[0]
                 }
+            //Check whether the target user is a friend of current user
             db.collection("users").document("${auth.currentUser?.uid}").collection("friends")
                 .whereEqualTo("email", userId)
                 .get()
@@ -92,6 +94,7 @@ fun UserSearchScreen(auth: FirebaseAuth, navController: NavController) {
                         route = "${Screen.ContactDetail.route}/${isFriend}/${hasFollowed}"
                     )
                 }
+            //If target user is not a friend of current user, get the user's detail from users database
             if (!isFriend) {
                 db.collection("users")
                     .whereEqualTo("email", userId)
