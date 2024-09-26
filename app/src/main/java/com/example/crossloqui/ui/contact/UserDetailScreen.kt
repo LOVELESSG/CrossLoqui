@@ -49,7 +49,14 @@ fun UserDetailScreen(navController: NavController) {
             paddingValues = paddingValues,
             navController = navController,
             haveFollowed = false,
-            isFriend = false
+            isFriend = false,
+            "gee",
+            "gee@mail.com",
+            "redf3245",
+            "female",
+            "19900213",
+            0,
+            0,
         )
     }
 }

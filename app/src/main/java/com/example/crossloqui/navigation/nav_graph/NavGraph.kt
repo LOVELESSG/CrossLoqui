@@ -76,11 +76,29 @@ fun SetupNavGraph(
             )
         }
         composable(
-            route = Screen.ContactDetail.route+"/{isFriend}/{hasFollowed}"
+            route = Screen.ContactDetail.route+"/{isFriend}/{hasFollowed}/{name}/{email}/{userId}/{gender}/{birthday}/{followerCount}/{followingCount}"
         ) {
             val isFriend = it.arguments!!.getString("isFriend").toBoolean()
             val hasFollowed = it.arguments!!.getString("hasFollowed").toBoolean()
-            ContactDetailScreen(isFriend = isFriend, hasFollowed = hasFollowed, navController = navController)
+            val name = it.arguments!!.getString("name").toString()
+            val email = it.arguments!!.getString("email").toString()
+            val userId = it.arguments!!.getString("userId").toString()
+            val gender = it.arguments!!.getString("gender").toString()
+            val birthday = it.arguments!!.getString("birthday").toString()
+            val followerCount = it.arguments!!.getString("followerCount")!!.toInt()
+            val followingCount = it.arguments!!.getString("followingCount")!!.toInt()
+            ContactDetailScreen(
+                isFriend = isFriend,
+                hasFollowed = hasFollowed,
+                name = name,
+                email = email,
+                userId = userId,
+                gender = gender,
+                birthday = birthday,
+                followerCount = followerCount,
+                followingCount = followingCount,
+                navController = navController
+            )
         }
         composable(
             route = Screen.UserDetail.route

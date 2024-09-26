@@ -68,7 +68,18 @@ import com.google.common.primitives.Booleans
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ContactDetailScreen(isFriend: Boolean, hasFollowed: Boolean, navController: NavController) {
+fun ContactDetailScreen(
+    isFriend: Boolean,
+    hasFollowed: Boolean,
+    name: String,
+    email: String,
+    userId: String,
+    gender: String,
+    birthday: String,
+    followingCount: Int,
+    followerCount: Int,
+    navController: NavController
+) {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
@@ -106,7 +117,14 @@ fun ContactDetailScreen(isFriend: Boolean, hasFollowed: Boolean, navController: 
             paddingValues = paddingValues,
             navController = navController,
             haveFollowed = hasFollowed,
-            isFriend = isFriend
+            isFriend = isFriend,
+            name = name,
+            email = email,
+            userId = userId,
+            gender = gender,
+            birthday = birthday,
+            followingCount = followingCount,
+            followerCount = followerCount
         )
     }
 }
@@ -116,6 +134,17 @@ fun ContactDetailScreen(isFriend: Boolean, hasFollowed: Boolean, navController: 
 @Composable
 fun ContactDetailScreenPreview() {
     CrossLoquiTheme {
-        ContactDetailScreen(true, false, navController = rememberNavController())
+        ContactDetailScreen(
+            true,
+            false,
+            "gee",
+            "gee@mail.com",
+            "redf3245",
+            "female",
+            "19900213",
+            0,
+            0,
+            navController = rememberNavController()
+        )
     }
 }

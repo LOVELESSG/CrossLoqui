@@ -63,6 +63,13 @@ fun ContactDetailContent(
     navController: NavController,
     haveFollowed: Boolean,
     isFriend: Boolean,
+    name: String,
+    email: String,
+    userId: String,
+    gender: String,
+    birthday: String,
+    followingCount: Int,
+    followerCount: Int,
     painter: Painter = painterResource(id = R.drawable.baseline_person_24)
 ) {
 
@@ -87,7 +94,7 @@ fun ContactDetailContent(
 
             Text(
                 //TODO get the contacts' name according to the userId
-                text = "Jack",
+                text = name,
                 modifier = Modifier
                     .padding(0.dp, 8.dp)
                     .fillMaxWidth(),
@@ -215,7 +222,7 @@ fun ContactDetailContent(
                         )
                         Text(
                             //TODO get the number of people that this user has followed according to userId
-                            text = "23",
+                            text = followingCount.toString(),
                             style = MaterialTheme.typography.titleLarge)
                     }
                     Column(
@@ -227,7 +234,7 @@ fun ContactDetailContent(
                         )
                         Text(
                             //TODO get the number of followers of this user according to the userId
-                            text = "366709",
+                            text = followerCount.toString(),
                             style = MaterialTheme.typography.titleLarge,
                             //fontWeight = FontWeight.Bold
                         )
@@ -236,7 +243,7 @@ fun ContactDetailContent(
             }
 
             //TODO get the basic information of this user according to the userId
-            ExpandableCard(birthday = "1999/09/13", gender = "Male", email = "Jack@mail.com")
+            ExpandableCard(birthday = birthday, gender = gender, email = email)
 
             Divider(modifier = Modifier.padding(0.dp, 8.dp))
 

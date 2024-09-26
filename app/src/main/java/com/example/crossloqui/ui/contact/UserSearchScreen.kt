@@ -53,7 +53,7 @@ import io.mockk.mockk
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
 fun UserSearchScreen(auth: FirebaseAuth, navController: NavController) {
-    var userId by remember {
+    var targetEmail by remember {
         mutableStateOf("")
     }
     var active by remember {
@@ -68,8 +68,8 @@ fun UserSearchScreen(auth: FirebaseAuth, navController: NavController) {
     var currentUser: User? = null
 
     SearchBar(
-        query = userId,
-        onQueryChange = { userId = it },
+        query = targetEmail,
+        onQueryChange = { targetEmail = it },
         onSearch = {
             active = false
             // Get currentUser
@@ -81,32 +81,52 @@ fun UserSearchScreen(auth: FirebaseAuth, navController: NavController) {
                 }
             //Check whether the target user is a friend of current user
             db.collection("users").document("${auth.currentUser?.uid}").collection("friends")
-                .whereEqualTo("email", userId)
+                .whereEqualTo("email", targetEmail)
                 .get()
                 .addOnSuccessListener { documentSnapshot ->
                     val user = documentSnapshot.toObjects<User>()
                     val name = user[0].name
                     val email = user[0].email
+                    val userId = user[0].id
+                    val gender = user[0].gender
+                    var birthday = user[0].birthday
+                    val followingCount = user[0].followingCount
+                    val followerCount = user[0].followerCount
+                    if (birthday == "") {
+                        birthday = "secret"
+                    }
                     isFriend = true
                     hasFollowed = currentUser?.followingUser?.contains(user[0].id) ?: false
                     //hasFollowed = user[0].followingUser.contains(user[0].id)
                     navController.navigate(
-                        route = "${Screen.ContactDetail.route}/${isFriend}/${hasFollowed}"
+                        route = "${Screen.ContactDetail.route}/$isFriend/$hasFollowed/$name/" +
+                                "$email/$userId/$gender/$birthday/$followerCount/$followingCount"
                     )
                 }
             //If target user is not a friend of current user, get the user's detail from users database
             if (!isFriend) {
                 db.collection("users")
-                    .whereEqualTo("email", userId)
+                    .whereEqualTo("email", targetEmail)
                     .get()
                     .addOnSuccessListener { documentSnapshot ->
                         if (documentSnapshot.isEmpty) {
                             Toast.makeText(context, "No such user", Toast.LENGTH_LONG).show()
                         } else {
                             val user = documentSnapshot.toObjects<User>()
+                            val name = user[0].name
+                            val email = user[0].email
+                            val userId = user[0].id
+                            val gender = user[0].gender
+                            var birthday = user[0].birthday
+                            val followingCount = user[0].followingCount
+                            val followerCount = user[0].followerCount
+                            if (birthday == "") {
+                                birthday = "secret"
+                            }
                             hasFollowed = currentUser?.followingUser?.contains(user[0].id) ?: false
                             navController.navigate(
-                                route = "${Screen.ContactDetail.route}/${isFriend}/${!hasFollowed}"
+                                route = "${Screen.ContactDetail.route}/$isFriend/$hasFollowed/" +
+                                        "$name/$email/$userId/$gender/$birthday/$followerCount/$followingCount"
                             )
                         }
                     }
@@ -125,8 +145,8 @@ fun UserSearchScreen(auth: FirebaseAuth, navController: NavController) {
                     imageVector = Icons.Filled.Clear,
                     contentDescription = "Clear",
                     modifier = Modifier.clickable {
-                        if (userId.isNotEmpty()) {
-                            userId = ""
+                        if (targetEmail.isNotEmpty()) {
+                            targetEmail = ""
                         }
                     }
                 )
