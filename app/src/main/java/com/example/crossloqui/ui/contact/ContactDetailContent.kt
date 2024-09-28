@@ -30,6 +30,8 @@ import androidx.compose.material.icons.filled.Female
 import androidx.compose.material.icons.filled.Male
 import androidx.compose.material.icons.filled.PersonAdd
 import androidx.compose.material.icons.filled.Textsms
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -38,6 +40,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -55,6 +58,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.crossloqui.R
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.ktx.Firebase
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -72,6 +80,9 @@ fun ContactDetailContent(
     followerCount: Int,
     painter: Painter = painterResource(id = R.drawable.baseline_person_24)
 ) {
+    val db = FirebaseFirestore.getInstance()
+    val auth = Firebase.auth
+    var showDialog by remember { mutableStateOf(false) }
 
     LazyColumn(modifier = Modifier.padding(paddingValues = paddingValues)) {
         item {
@@ -163,12 +174,27 @@ fun ContactDetailContent(
                             colors = IconButtonDefaults.iconButtonColors(
                                 containerColor = MaterialTheme.colorScheme.primaryContainer
                             ),
-                            onClick = { /*TODO add friend(send request)*/ }
+                            onClick = { /*TODO add friend(send request)*/
+                                showDialog = true
+                            }
                         ) {
                             Icon(
                                 imageVector = Icons.Filled.PersonAdd,
                                 contentDescription = "Add friend"
                             )
+                            if (showDialog) {
+                                ConfirmationDialog(userId) { input ->
+                                    val greetMessage = hashMapOf(
+                                        "id" to userId,
+                                        "message" to input,
+                                        "addDate" to LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"))
+                                    )
+                                    db.collection("friendRequest")
+                                        .document(userId + "_" + auth.currentUser?.uid)
+                                        .set(greetMessage)
+                                    showDialog = false
+                                }
+                            }
                         }
                         Text(text = "add friend")
                     }
@@ -346,4 +372,40 @@ fun ExpandableCard(birthday: String, gender: String, email: String) {
             }
         }
     }
+}
+
+@Composable
+fun ConfirmationDialog (userId: String, onClose: (String) -> Unit) {
+    var input by remember { mutableStateOf("") }
+
+    AlertDialog(
+        onDismissRequest = {
+            onClose(input)
+        },
+        title = {
+            Text(text = "Confirm Information")
+        },
+        text = {
+            TextField(
+                value = input,
+                onValueChange = { input = it },
+                label = { Text("Input here") }
+            )
+        },
+        dismissButton = {
+            Button(onClick = { onClose(input) }) {
+                Text("cancel")
+            }
+        },
+        confirmButton = {
+            Button(onClick = {
+
+
+
+                onClose(input)
+            }) {
+                Text("send")
+            }
+        }
+    )
 }
