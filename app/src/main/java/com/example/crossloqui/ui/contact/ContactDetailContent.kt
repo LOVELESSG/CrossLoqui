@@ -58,10 +58,14 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.crossloqui.R
+import com.example.crossloqui.data.FriendRequest
+import com.example.crossloqui.data.User
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.toObjects
 import com.google.firebase.ktx.Firebase
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -175,6 +179,7 @@ fun ContactDetailContent(
                                 containerColor = MaterialTheme.colorScheme.primaryContainer
                             ),
                             onClick = { /*TODO add friend(send request)*/
+                                // 添加逻辑点击添加好友时查询是否已经有好友请求存在，如有，bottomsheet展示请求并提供三个选项：同意，拒绝，稍后处理
                                 showDialog = true
                             }
                         ) {
@@ -184,10 +189,21 @@ fun ContactDetailContent(
                             )
                             if (showDialog) {
                                 ConfirmationDialog(userId) { input ->
-                                    val greetMessage = hashMapOf(
-                                        "id" to userId,
-                                        "message" to input,
-                                        "addDate" to LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"))
+                                    var currentUserName = ""
+                                    db.collection("users")
+                                        .whereEqualTo("id", auth.currentUser?.uid)
+                                        .get()
+                                        .addOnSuccessListener { documentSnapshot ->
+                                            currentUserName = documentSnapshot.toObjects<User>()[0].name
+                                        }
+                                    val greetMessage = FriendRequest(
+                                        senderId = auth.currentUser?.uid,
+                                        senderName = currentUserName,
+                                        receiverId = userId,
+                                        receiverName = name,
+                                        members = mutableListOf(auth.currentUser?.uid, userId),
+                                        message = input,
+                                        addTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
                                     )
                                     db.collection("friendRequest")
                                         .document(userId + "_" + auth.currentUser?.uid)

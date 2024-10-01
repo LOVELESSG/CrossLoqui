@@ -91,7 +91,8 @@ fun ContactScreen(
                                 .size(40.dp)
                                 .background(MaterialTheme.colorScheme.primaryContainer),
                         )
-                    }
+                    },
+                    modifier = Modifier.clickable { navController.navigate(Screen.FriendRequestScreen.route) }
                 )
                 Divider()
             }

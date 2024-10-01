@@ -8,6 +8,7 @@ import androidx.navigation.compose.composable
 import com.example.crossloqui.navigation.Screen
 import com.example.crossloqui.ui.contact.ContactDetailScreen
 import com.example.crossloqui.ui.contact.ContactScreen
+import com.example.crossloqui.ui.contact.NewFriendScreen
 import com.example.crossloqui.ui.contact.UserDetailScreen
 import com.example.crossloqui.ui.contact.UserSearchScreen
 import com.example.crossloqui.ui.conversation.ConversationScreen
@@ -109,6 +110,11 @@ fun SetupNavGraph(
             route = Screen.UserSearchScreen.route
         ) {
             UserSearchScreen(auth = auth, navController = navController)
+        }
+        composable(
+            route = Screen.FriendRequestScreen.route
+        ) {
+            NewFriendScreen(navController = navController)
         }
     }
 }

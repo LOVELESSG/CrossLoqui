@@ -27,17 +27,17 @@ fun CrossLoquiScaffold(title:String, navController: NavController, content: @Com
     val fabIcon: ImageVector
     val fabTarget:String
     if (currentDestination.equals(Screen.Home.route)) {
-        titleName = "Message"
+        titleName = title
         fabIcon = Icons.Filled.Add
         fabTarget = ""
     }
     else if (currentDestination.equals(Screen.Post.route)) {
-        titleName = "Post"
+        titleName = title
         fabIcon = Icons.Filled.PostAdd
         fabTarget = ""
     }
     else {
-        titleName = "Contacts"
+        titleName = title
         fabIcon = Icons.Filled.PersonAdd
         fabTarget = Screen.UserSearchScreen.route
     }
