@@ -20,16 +20,6 @@ import com.example.crossloqui.components.CrossLoquiScaffold
 fun HomepageScreen(
     navController: NavController
 ) {
-    /*Scaffold(
-        topBar = { CrossLoquiAppBar(title = { Text(text = "Message") }) },
-        bottomBar = { CrossLoquiNavigationBar(navController) },
-        modifier = Modifier.fillMaxSize()
-    ) { paddingValues ->
-        Text(
-            modifier = Modifier.padding(paddingValues),
-            text = "Hello Android!"
-        )
-    }*/
     CrossLoquiScaffold(title = "Message", navController = navController) {paddingValues ->
         Text(
             modifier = Modifier.padding(paddingValues),

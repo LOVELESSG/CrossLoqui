@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
@@ -111,184 +112,189 @@ fun AccountInformationScreen(
     val storageRef = storage.reference
 
 
-    Column(
+    LazyColumn (
         modifier = Modifier
             .fillMaxSize()
-            .padding(horizontal = 32.dp)
+            //.padding(horizontal = 32.dp)
     ) {
-        Box(
-            modifier = Modifier
-                .weight(4f)
-                .align(Alignment.Start)
-        ) {
-            Text(
-                text = "Account Details",
-                fontSize = 36.sp,
-                fontWeight = FontWeight.Bold,
+        item {
+            Box(
                 modifier = Modifier
-                    .align(Alignment.Center)
-            )
-        }
-
-        Column(
-            modifier = Modifier
-                .weight(6f)
-        ) {
-            Card(
-                shape = CircleShape,
-                modifier = Modifier
-                    .size(100.dp),
+                    //.weight(4f)
+                    //.align(Alignment.Start)
             ) {
-                Image(
-                    painter = painter,
-                    contentDescription = null,
+                Text(
+                    text = "Account Details",
+                    fontSize = 36.sp,
+                    fontWeight = FontWeight.Bold,
                     modifier = Modifier
-                        .clip(CircleShape)
-                        .size(100.dp)
-                        .clickable {
-                            launcher.launch(cropOptions)
-                        },
-                    contentScale = ContentScale.Crop
+                        .align(Alignment.Center)
                 )
             }
-            OutlinedTextField(
-                value = userName,
-                onValueChange = { userName = it },
-                label = { Text(text = "User Name") },
-                placeholder = { Text(text = "Input your user name") },
-                //isError = userName.isEmpty(),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 8.dp)
-            )
+        }
 
-            Row(
+        item {
+            Column(
                 modifier = Modifier
-                    .padding(top = 8.dp)
-                    .fillMaxWidth()
+                    //.weight(6f)
             ) {
-                TextField(
-                    value = birthday,
-                    onValueChange = { birthday = it },
-                    label = { Text(text = "Birthday") },
-                    singleLine = true,
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                    modifier = Modifier.weight(1f)
-                )
-                ExposedDropdownMenuBox(
-                    expanded = expanded,
-                    onExpandedChange = { expanded = it },
+                Card(
+                    shape = CircleShape,
                     modifier = Modifier
-                        .padding(start = 8.dp)
-                        .weight(1f)
+                        .size(100.dp),
+                ) {
+                    Image(
+                        painter = painter,
+                        contentDescription = null,
+                        modifier = Modifier
+                            .clip(CircleShape)
+                            .size(100.dp)
+                            .clickable {
+                                launcher.launch(cropOptions)
+                            },
+                        contentScale = ContentScale.Crop
+                    )
+                }
+                OutlinedTextField(
+                    value = userName,
+                    onValueChange = { userName = it },
+                    label = { Text(text = "User Name") },
+                    placeholder = { Text(text = "Input your user name") },
+                    //isError = userName.isEmpty(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 8.dp)
+                )
+
+                Row(
+                    modifier = Modifier
+                        .padding(top = 8.dp)
+                        .fillMaxWidth()
                 ) {
                     TextField(
-                        modifier = Modifier.menuAnchor(),
-                        value = selectedGender,
-                        onValueChange = {},
-                        readOnly = true,
+                        value = birthday,
+                        onValueChange = { birthday = it },
+                        label = { Text(text = "Birthday") },
                         singleLine = true,
-                        label = { Text(text = "Gender") },
-                        trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded =expanded) },
-                        colors = ExposedDropdownMenuDefaults.textFieldColors(),
-                        )
-                    ExposedDropdownMenu(
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                        modifier = Modifier.weight(1f)
+                    )
+                    ExposedDropdownMenuBox(
                         expanded = expanded,
-                        onDismissRequest = { expanded = false }
+                        onExpandedChange = { expanded = it },
+                        modifier = Modifier
+                            .padding(start = 8.dp)
+                            .weight(1f)
                     ) {
-                        genderOptions.forEach { option ->
-                            DropdownMenuItem(
-                                text = { Text(text = option) },
-                                onClick = {
-                                    selectedGender = option
-                                    expanded = false
-                                },
-                                contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding
-                            )
+                        TextField(
+                            modifier = Modifier.menuAnchor(),
+                            value = selectedGender,
+                            onValueChange = {},
+                            readOnly = true,
+                            singleLine = true,
+                            label = { Text(text = "Gender") },
+                            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded =expanded) },
+                            colors = ExposedDropdownMenuDefaults.textFieldColors(),
+                        )
+                        ExposedDropdownMenu(
+                            expanded = expanded,
+                            onDismissRequest = { expanded = false }
+                        ) {
+                            genderOptions.forEach { option ->
+                                DropdownMenuItem(
+                                    text = { Text(text = option) },
+                                    onClick = {
+                                        selectedGender = option
+                                        expanded = false
+                                    },
+                                    contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding
+                                )
+                            }
                         }
                     }
                 }
-            }
 
-            OutlinedTextField(
-                value = bio,
-                onValueChange = { bio = it },
-                label = { Text(text = "Bio") },
-                placeholder = { Text(text = "Introduce yourself") },
-                minLines = 3,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 8.dp)
-            )
-            Button(
-                onClick = {
-                    if (isValidBirthdayFormat(inputBirthday = birthday) || birthday == "") {
-                        try {
-                            auth.createUserWithEmailAndPassword(email, password)
-                                .addOnCompleteListener { task ->
-                                    if (task.isSuccessful) {
-                                        val file = Uri.fromFile(File(imagePath))
-                                        val avatarRef = storageRef.child("avatars/${auth.currentUser?.uid}")
-                                        val uploadTask = avatarRef.putFile(file)
-                                        uploadTask.addOnFailureListener {
-                                            Toast.makeText(
-                                                context,
-                                                "Upload failed",
-                                                Toast.LENGTH_SHORT
-                                            ).show()
-                                        }.addOnSuccessListener {
-                                            Toast.makeText(
-                                                context,
-                                                "Registration successful",
-                                                Toast.LENGTH_SHORT
-                                            ).show()
-                                        }
-                                        val user = User(
-                                            name = userName,
-                                            email = email,
-                                            bio = bio,
-                                            id = auth.currentUser?.uid,
-                                            gender = selectedGender,
-                                            birthday = birthday,
-                                            registerDate = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")),
-                                            followingCount = 0,
-                                            followerCount = 0
-                                        )
-                                        db.collection("users")
-                                            .add(user)
-                                        navController.navigate("home_screen")
-                                    } else {
-                                        val e = task.exception
-                                        if (e is FirebaseAuthUserCollisionException) {
-                                            Toast.makeText(
-                                                context,
-                                                "Email address already registered",
-                                                Toast.LENGTH_SHORT
-                                            ).show()
+                OutlinedTextField(
+                    value = bio,
+                    onValueChange = { bio = it },
+                    label = { Text(text = "Bio") },
+                    placeholder = { Text(text = "Introduce yourself") },
+                    minLines = 3,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 8.dp)
+                )
+                Button(
+                    onClick = {
+                        if (isValidBirthdayFormat(inputBirthday = birthday) || birthday == "") {
+                            try {
+                                auth.createUserWithEmailAndPassword(email, password)
+                                    .addOnCompleteListener { task ->
+                                        if (task.isSuccessful) {
+                                            val file = Uri.fromFile(File(imagePath))
+                                            val avatarRef = storageRef.child("avatars/${auth.currentUser?.uid}")
+                                            val uploadTask = avatarRef.putFile(file)
+                                            uploadTask.addOnFailureListener {
+                                                Toast.makeText(
+                                                    context,
+                                                    "Upload failed",
+                                                    Toast.LENGTH_SHORT
+                                                ).show()
+                                            }.addOnSuccessListener {
+                                                Toast.makeText(
+                                                    context,
+                                                    "Registration successful",
+                                                    Toast.LENGTH_SHORT
+                                                ).show()
+                                            }
+                                            val user = User(
+                                                name = userName,
+                                                email = email,
+                                                bio = bio,
+                                                id = auth.currentUser?.uid,
+                                                gender = selectedGender,
+                                                birthday = birthday,
+                                                registerDate = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")),
+                                                followingCount = 0,
+                                                followerCount = 0
+                                            )
+                                            db.collection("users")
+                                                .add(user)
+                                            navController.navigate("home_screen")
                                         } else {
-                                            Toast.makeText(
-                                                context,
-                                                "Registration failed",
-                                                Toast.LENGTH_SHORT
-                                            ).show()
+                                            val e = task.exception
+                                            if (e is FirebaseAuthUserCollisionException) {
+                                                Toast.makeText(
+                                                    context,
+                                                    "Email address already registered",
+                                                    Toast.LENGTH_SHORT
+                                                ).show()
+                                            } else {
+                                                Toast.makeText(
+                                                    context,
+                                                    "Registration failed",
+                                                    Toast.LENGTH_SHORT
+                                                ).show()
+                                            }
                                         }
                                     }
-                                }
-                        } catch (_: Exception) {
-                            Toast.makeText(context, "Registration failed", Toast.LENGTH_SHORT)
-                                .show()
+                            } catch (_: Exception) {
+                                Toast.makeText(context, "Registration failed", Toast.LENGTH_SHORT)
+                                    .show()
+                            }
+                        } else {
+                            Toast.makeText(context, "Input correct birthday format like 19701201", Toast.LENGTH_LONG).show()
                         }
-                    } else {
-                        Toast.makeText(context, "Input correct birthday format like 19701201", Toast.LENGTH_LONG).show()
-                    }
-                },
-                modifier = Modifier
-                    .align(Alignment.CenterHorizontally)
-                    .padding(top = 8.dp)
-            ) {
-                Text(text = "Register")
+                    },
+                    modifier = Modifier
+                        .align(Alignment.CenterHorizontally)
+                        .padding(top = 8.dp)
+                ) {
+                    Text(text = "Register")
+                }
             }
         }
+
     }
 }
 

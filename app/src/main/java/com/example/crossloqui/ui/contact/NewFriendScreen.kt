@@ -105,12 +105,15 @@ fun NewFriendScreen(navController: NavController) {
                                 )
                             },
                             trailingContent = {
-                                IconButton(onClick = {}) {
-                                    Icon(Icons.Default.Check, "")
+                                Row {
+                                    IconButton(onClick = {}) {
+                                        Icon(Icons.Default.Check, "")
+                                    }
+                                    IconButton(onClick = {}) {
+                                        Icon(Icons.Default.Close, "")
+                                    }
                                 }
-                                IconButton(onClick = {}) {
-                                    Icon(Icons.Default.Close, "")
-                                }
+
                             }
                         )
                     }

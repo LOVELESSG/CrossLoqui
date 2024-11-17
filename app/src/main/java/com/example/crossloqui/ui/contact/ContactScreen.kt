@@ -66,14 +66,12 @@ fun ContactScreen(
         )
     val sortedItems = sampleContacts.sortedBy { it.name }
     CrossLoquiScaffold(title = "Contacts", navController = navController) { paddingValues ->
-        //Text(modifier = Modifier.padding(paddingValues), text = "this is the contacts screen")
         //获取朋友列表
         //遍历列表
         //项目.名称, 项目.bio, 项目.头像 = 列表项
         LazyColumn(
             modifier = Modifier
                 .padding(top = paddingValues.calculateTopPadding())
-                //.padding(16.dp, 0.dp, 16.dp, 8.dp)
         ) {
             item {
                 ListItem(
@@ -148,17 +146,11 @@ fun ContactScreen(
                         Toast.makeText(context, "click", Toast.LENGTH_SHORT).show()
                     }
                 )
-                //ContactItem(name = sortedItems[item].name, bio = sortedItems[item].bio, navController = navController)
-                //ContactItem(name = sortedItems[item].name, bio = sortedItems[item].bio, navController = navController)
-                //ContactItem(name = sortedItems[item].name, bio = sortedItems[item].bio, navController = navController)
             }
             item {
                 Spacer(modifier = Modifier.height(paddingValues.calculateBottomPadding()))
             }
         }
-        /*Column(modifier = Modifier.padding()) {
-            ContactItem(name = sampleContacts[0].name, bio = "Hello Android")
-        }*/
     }
 
     BackHandler {
@@ -166,66 +158,6 @@ fun ContactScreen(
     }
 }
 
-/*@Composable
-fun ContactItem(
-    name: String,
-    bio: String,
-    navController: NavController,
-    painter: Painter = painterResource(id = R.drawable.baseline_person_24)
-) {
-    val activity = (LocalContext.current as? Activity)
-
-    Row(
-        modifier = Modifier
-            .height(intrinsicSize = IntrinsicSize.Min)
-            .fillMaxWidth()
-            .padding(16.dp, 8.dp, 16.dp, 0.dp)
-            .clickable(onClick = {
-                navController.navigate("${Screen.ContactDetail.route}/${true}/${false}")
-            })
-    ) {
-        Box(modifier = Modifier.padding(0.dp, 8.dp)) {
-            Image(
-                painter = painter,
-                contentDescription = "",
-                modifier = Modifier
-                    .clip(CircleShape)
-                    .size(40.dp)
-                    .background(MaterialTheme.colorScheme.primaryContainer),
-            )
-        }
-
-
-        Column(
-            verticalArrangement = Arrangement.Center,
-            modifier = Modifier
-                .fillMaxHeight()
-                .padding(start = 16.dp)
-        ) {
-            Text(
-                style = MaterialTheme.typography.titleLarge,
-                color = MaterialTheme.colorScheme.onSurface,
-                text = name
-            )
-            Text(
-                maxLines = 1,
-                style = MaterialTheme.typography.bodyLarge,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                overflow = TextOverflow.Ellipsis,
-                text = bio
-            )
-        }
-    }
-
-    BackHandler {
-        activity?.finish()
-    }
-}*/
-
-@Composable
-fun NewFriendItem() {
-
-}
 
 @Preview(showSystemUi = true)
 @Composable
@@ -242,12 +174,3 @@ fun ContactScreenDarkModePreview() {
         ContactScreen(navController = rememberNavController())
     }
 }
-
-/*
-@Preview(showBackground = true)
-@Composable
-fun ContactItemPreview() {
-    CrossLoquiTheme {
-        ContactItem(name = "Jack", bio = "Hello Android!", navController = rememberNavController())
-    }
-}*/
