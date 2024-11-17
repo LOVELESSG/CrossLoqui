@@ -70,7 +70,6 @@ fun NewFriendScreen(navController: NavController) {
                     }
                 }
             } else {
-                Log.d("newFriendArrayTest", requestItem.size.toString())
                 items(requestItem.size) { item ->
                     if (requestItem[item].senderId == currentUserId) {
                         ListItem(
@@ -140,7 +139,6 @@ fun NewFriendScreen(navController: NavController) {
 @Composable
 fun NewFriendScreenPreview() {
     CrossLoquiTheme {
-        //NewFriendScreen(navController = rememberNavController())
         LazyColumn {
             item {
                 ListItem(

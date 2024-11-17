@@ -4,6 +4,12 @@ plugins {
 
     // Add the Google services Gradle plugin
     id("com.google.gms.google-services")
+
+    // Add ksp
+    id("com.google.devtools.ksp")
+
+    // Add hilt
+    id("com.google.dagger.hilt.android")
 }
 
 android {
@@ -83,8 +89,8 @@ dependencies {
 
     // Add support for firebase
     // Import the Firebase BoM
-    implementation(platform("com.google.firebase:firebase-bom:33.0.0"))
-    implementation("com.google.firebase:firebase-analytics")
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.analytics)
 
     // Add support for Firebase Cloud Massage
     implementation(libs.firebase.messaging)
@@ -106,5 +112,9 @@ dependencies {
 
     // Add support for image cropper
     implementation(libs.android.image.cropper)
+
+    // Add support for hilt
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.android.compiler)
 
 }

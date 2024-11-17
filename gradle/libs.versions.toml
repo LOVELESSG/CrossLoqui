@@ -1,32 +1,38 @@
 [versions]
 agp = "8.7.2"
-kotlin = "1.9.0"
-coreKtx = "1.12.0"
+firebaseBom = "33.6.0"
+hiltAndroidCompiler = "2.51.1"
+kotlin = "1.9.24"
+coreKtx = "1.15.0"
 junit = "4.13.2"
-junitVersion = "1.1.5"
-espressoCore = "3.5.1"
-lifecycleRuntimeKtx = "2.7.0"
-activityCompose = "1.8.2"
-composeBom = "2023.08.00"
-navigationCompose = "2.7.7"
-materialIconsExtended = "1.6.6"
-googleGmsGoogleServices = "4.4.1"
-firebaseMessaging = "24.0.0"
-firebaseFirestore = "25.0.0"
-firebaseAuth = "23.0.0"
+junitVersion = "1.2.1"
+espressoCore = "3.6.1"
+lifecycleRuntimeKtx = "2.8.7"
+activityCompose = "1.9.3"
+composeBom = "2024.11.00"
+navigationCompose = "2.8.4"
+materialIconsExtended = "1.7.5"
+googleGmsGoogleServices = "4.4.2"
+firebaseMessaging = "24.1.0"
+firebaseFirestore = "25.1.1"
+firebaseAuth = "23.1.0"
 mockk = "1.13.11"
-coilCompose = "2.6.0"
-firebaseStorage = "21.0.0"
+coilCompose = "2.7.0"
+firebaseStorage = "21.0.1"
 androidImageCropper = "4.5.0"
-lifecycleViewmodelKtx = "2.8.3"
-lifecycleViewmodelCompose = "2.8.3"
-lifecycleLivedataKtx = "2.8.3"
-lifecycleRuntimeKtxVersion = "2.8.3"
-lifecycleViewmodelSavedstate = "2.8.3"
-lifecycleCompiler = "2.8.3"
+lifecycleViewmodelKtx = "2.8.7"
+lifecycleViewmodelCompose = "2.8.7"
+lifecycleLivedataKtx = "2.8.7"
+lifecycleRuntimeKtxVersion = "2.8.7"
+lifecycleViewmodelSavedstate = "2.8.7"
+lifecycleCompiler = "2.8.7"
+hiltAndroid = "2.52"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
+firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
+hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hiltAndroidCompiler" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
@@ -55,6 +61,7 @@ androidx-lifecycle-livedata-ktx = { group = "androidx.lifecycle", name = "lifecy
 lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtxVersion" }
 androidx-lifecycle-viewmodel-savedstate = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-savedstate", version.ref = "lifecycleViewmodelSavedstate" }
 androidx-lifecycle-compiler = { group = "androidx.lifecycle", name = "lifecycle-compiler", version.ref = "lifecycleCompiler" }
+hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hiltAndroid" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
