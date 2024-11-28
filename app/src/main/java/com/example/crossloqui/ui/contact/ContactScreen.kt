@@ -26,6 +26,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.GroupAdd
 import androidx.compose.material3.Divider
 import androidx.compose.material3.DividerDefaults
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -92,7 +93,7 @@ fun ContactScreen(
                     },
                     modifier = Modifier.clickable { navController.navigate(Screen.FriendRequestScreen.route) }
                 )
-                Divider()
+                HorizontalDivider()
             }
             items(sortedItems.size){item ->
                 ListItem(
