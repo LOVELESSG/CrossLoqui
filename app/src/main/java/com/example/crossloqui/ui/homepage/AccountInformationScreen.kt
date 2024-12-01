@@ -251,7 +251,7 @@ fun AccountInformationScreen(
                                                 name = userName,
                                                 email = email,
                                                 bio = bio,
-                                                id = auth.currentUser?.uid,
+                                                id = auth.currentUser!!.uid,
                                                 gender = selectedGender,
                                                 birthday = birthday,
                                                 registerDate = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")),

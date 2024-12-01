@@ -1,5 +1,6 @@
 package com.example.crossloqui.ui.contact
 
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -120,6 +121,7 @@ fun UserSearchScreen(auth: FirebaseAuth, navController: NavController) {
                             var birthday = user[0].birthday
                             val followingCount = user[0].followingCount
                             val followerCount = user[0].followerCount
+                            Log.d("checkLocation", email)
                             if (birthday == "") {
                                 birthday = "secret"
                             }
