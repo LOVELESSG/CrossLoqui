@@ -75,34 +75,19 @@ fun SetupNavGraph(
             )
         }
         composable(
-            route = Screen.ContactDetail.route+"/{isFriend}/{hasFollowed}/{name}/{email}/{userId}/{gender}/{birthday}/{followerCount}/{followingCount}"
+            route = Screen.ContactDetail.route+"/{isFriend}/{targetEmail}"
         ) {
             val isFriend = it.arguments!!.getString("isFriend").toBoolean()
-            val hasFollowed = it.arguments!!.getString("hasFollowed").toBoolean()
-            val name = it.arguments!!.getString("name").toString()
-            val email = it.arguments!!.getString("email").toString()
-            val userId = it.arguments!!.getString("userId").toString()
-            val gender = it.arguments!!.getString("gender").toString()
-            val birthday = it.arguments!!.getString("birthday").toString()
-            val followerCount = it.arguments!!.getString("followerCount")!!.toInt()
-            val followingCount = it.arguments!!.getString("followingCount")!!.toInt()
+            val targetEmail = it.arguments!!.getString("targetEmail").toString()
             ContactDetailScreen(
                 isFriend = isFriend,
-                hasFollowed = hasFollowed,
-                name = name,
-                email = email,
-                userId = userId,
-                gender = gender,
-                birthday = birthday,
-                followerCount = followerCount,
-                followingCount = followingCount,
-                navController = navController
+                email = targetEmail,
             )
         }
         composable(
             route = Screen.UserSearchScreen.route
         ) {
-            UserSearchScreen(auth = auth, navController = navController)
+            UserSearchScreen(navController = navController)
         }
         composable(
             route = Screen.FriendRequestScreen.route
