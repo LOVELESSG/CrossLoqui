@@ -1,6 +1,7 @@
 package com.example.crossloqui.ui.contact
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
@@ -36,39 +37,54 @@ fun UserSearchScreen(navController: NavController) {
         mutableStateOf(false)
     }
 
+    //val onActiveChange = { active = it }
+    val colors1 = SearchBarDefaults.colors(containerColor = Color.Transparent)
     SearchBar(
-        query = targetEmail,
-        onQueryChange = { targetEmail = it },
-        onSearch = {
-            active = false
-            navController.navigate(route = "${Screen.ContactDetail.route}/$isFriend/$targetEmail")
-        },
-        active = active,
-        onActiveChange = { active = it },
-        shape = SearchBarDefaults.fullScreenShape,
-        placeholder = { Text(text = "Search User ID Here") },
-        leadingIcon = {
-            Icon(imageVector = Icons.Filled.Search, contentDescription = "Search User")
-        },
-        trailingIcon = {
-            if (active) {
-                Icon(
-                    imageVector = Icons.Filled.Clear,
-                    contentDescription = "Clear",
-                    modifier = Modifier.clickable {
-                        if (targetEmail.isNotEmpty()) {
-                            targetEmail = ""
-                        }
+        inputField = {
+            SearchBarDefaults.InputField(
+                query = targetEmail,
+                onQueryChange = { targetEmail = it },
+                onSearch = {
+                    active = false
+                    navController.navigate(route = "${Screen.ContactDetail.route}/$isFriend/$targetEmail")
+                },
+                expanded = active,
+                onExpandedChange = { active = it },
+                enabled = true,
+                placeholder = { Text(text = "Search User ID Here") },
+                leadingIcon = {
+                    Icon(imageVector = Icons.Filled.Search, contentDescription = "Search User")
+                },
+                trailingIcon = {
+                    if (active) {
+                        Icon(
+                            imageVector = Icons.Filled.Clear,
+                            contentDescription = "Clear",
+                            modifier = Modifier.clickable {
+                                if (targetEmail.isNotEmpty()) {
+                                    targetEmail = ""
+                                }
+                            }
+                        )
                     }
-                )
-            }
+                },
+                colors = colors1.inputFieldColors,
+                interactionSource = null,
+            )
         },
-        colors = SearchBarDefaults.colors(containerColor = Color.Transparent),
+        expanded = active,
+        onExpandedChange = {
+            active = it
+        },
         modifier = Modifier
-            .fillMaxWidth()
-    ) {
-
-    }
+            .fillMaxWidth(),
+        shape = SearchBarDefaults.fullScreenShape,
+        colors = colors1,
+        tonalElevation = SearchBarDefaults.TonalElevation,
+        shadowElevation = SearchBarDefaults.ShadowElevation,
+        windowInsets = SearchBarDefaults.windowInsets,
+        content = {},
+    )
 }
 
 @Preview(showSystemUi = true)

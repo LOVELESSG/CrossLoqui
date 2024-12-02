@@ -12,11 +12,13 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
@@ -28,10 +30,12 @@ import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Female
 import androidx.compose.material.icons.filled.Male
 import androidx.compose.material.icons.filled.PersonAdd
+import androidx.compose.material.icons.filled.SearchOff
 import androidx.compose.material.icons.filled.Textsms
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -52,9 +56,12 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.crossloqui.R
+import com.example.crossloqui.firebase.repositories.Resources
+import com.example.crossloqui.ui.theme.CrossLoquiTheme
 
 @Composable
 fun ContactDetailContent(
@@ -71,214 +78,247 @@ fun ContactDetailContent(
         contactDetailViewModel.getCurrentUserDetail()
     }
 
-    LazyColumn(modifier = Modifier.padding(paddingValues = paddingValues)) {
-        item {
+    when(contactDetailUiState.targetUser) {
+        is Resources.Error -> {
             Box(
-                contentAlignment = Alignment.Center,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(0.dp, 8.dp)
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
             ) {
-                Image(
-                    //TODO Should get the contacts' avatar according to the userId
-                    painter = painter,
-                    contentDescription = "",
-                    modifier = Modifier
-                        .clip(CircleShape)
-                        .size(180.dp)
-                        .background(MaterialTheme.colorScheme.primaryContainer),
-                )
-            }
-
-            Text(
-                //TODO get the contacts' name according to the userId
-                text = contactDetailUiState.targetUser.data?.name ?: "Name",
-                modifier = Modifier
-                    .padding(0.dp, 8.dp)
-                    .fillMaxWidth(),
-                textAlign = TextAlign.Center,
-                style = MaterialTheme.typography.headlineLarge,
-                maxLines = 1
-            )
-
-            //if (isFriend)
-            if (contactDetailUiState.currentUser.data?.friendList?.contains(email) == true) {
-                Row(
-                    horizontalArrangement = Arrangement.SpaceEvenly,
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(0.dp, 8.dp)
+                Column(
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        IconButton(
-                            colors = IconButtonDefaults.iconButtonColors(
-                                containerColor = MaterialTheme.colorScheme.primaryContainer
-                            ),
-                            onClick = { /*TODO start a chat*/ }
-                        ) {
-                            Icon(imageVector = Icons.Filled.Textsms, contentDescription = "Start chatting")
-                        }
-                        Text(text = "message")
-                    }
-
-                    //if (haveFollowed)
-                    if (contactDetailUiState.currentUser.data.followingUser.contains(email)) {
-                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                            IconButton(
-                                colors = IconButtonDefaults.iconButtonColors(
-                                    containerColor = MaterialTheme.colorScheme.primaryContainer
-                                ),
-                                onClick = { /*TODO stop following the user*/ },
-                            ) {
-                                Icon(imageVector = Icons.Filled.Favorite, contentDescription = "Follow")
-                            }
-                            Text(text = "following")
-                        }
-
-                    } else {
-                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                            IconButton(
-                                colors = IconButtonDefaults.iconButtonColors(
-                                    containerColor = MaterialTheme.colorScheme.primaryContainer
-                                ),
-                                onClick = { /*TODO follow the user*/ }
-                            ) {
-                                Icon(imageVector = Icons.Filled.FavoriteBorder, contentDescription = "Stop following")
-                            }
-                            Text(text = "follow")
-                        }
-                    }
+                    Image(
+                        imageVector = Icons.Default.SearchOff,
+                        contentDescription = "No such user",
+                        modifier = Modifier.size(64.dp)
+                    )
+                    Text(
+                        modifier = Modifier
+                            .padding(8.dp),
+                        text = "No such user",
+                        style = MaterialTheme.typography.titleLarge
+                    )
                 }
-            } else {
-                Row(
-                    horizontalArrangement = Arrangement.SpaceEvenly,
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(0.dp, 8.dp)
-                ) {
-                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        IconButton(
-                            colors = IconButtonDefaults.iconButtonColors(
-                                containerColor = MaterialTheme.colorScheme.primaryContainer
-                            ),
-                            onClick = { /*TODO add friend(send request)*/
-                                // 添加逻辑点击添加好友时查询是否已经有好友请求存在，如有，bottomsheet展示请求并提供三个选项：同意，拒绝，稍后处理
-                                showDialog = true
-                            }
+            }
+        }
+        is Resources.Loading -> {
+            CircularProgressIndicator(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .wrapContentSize(align = Alignment.Center)
+            )
+        }
+        is Resources.Success -> {
+            LazyColumn(modifier = Modifier.padding(paddingValues = paddingValues)) {
+                item {
+                    Box(
+                        contentAlignment = Alignment.Center,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(0.dp, 8.dp)
+                    ) {
+                        Image(
+                            //TODO Should get the contacts' avatar according to the userId
+                            painter = painter,
+                            contentDescription = "",
+                            modifier = Modifier
+                                .clip(CircleShape)
+                                .size(180.dp)
+                                .background(MaterialTheme.colorScheme.primaryContainer),
+                        )
+                    }
+
+                    Text(
+                        //TODO get the contacts' name according to the userId
+                        text = contactDetailUiState.targetUser.data?.name ?: "Name",
+                        modifier = Modifier
+                            .padding(0.dp, 8.dp)
+                            .fillMaxWidth(),
+                        textAlign = TextAlign.Center,
+                        style = MaterialTheme.typography.headlineLarge,
+                        maxLines = 1
+                    )
+
+                    //if (isFriend)
+                    if (contactDetailUiState.currentUser.data?.friendList?.contains(email) == true) {
+                        Row(
+                            horizontalArrangement = Arrangement.SpaceEvenly,
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(0.dp, 8.dp)
                         ) {
-                            Icon(
-                                imageVector = Icons.Filled.PersonAdd,
-                                contentDescription = "Add friend"
-                            )
-                            if (showDialog) {
-                                ConfirmationDialog() { input ->
-                                    contactDetailViewModel.addFriend(input)
-                                    showDialog = false
+                            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                IconButton(
+                                    colors = IconButtonDefaults.iconButtonColors(
+                                        containerColor = MaterialTheme.colorScheme.primaryContainer
+                                    ),
+                                    onClick = { /*TODO start a chat*/ }
+                                ) {
+                                    Icon(imageVector = Icons.Filled.Textsms, contentDescription = "Start chatting")
+                                }
+                                Text(text = "message")
+                            }
+
+                            //if (haveFollowed)
+                            if (contactDetailUiState.currentUser.data.followingUser.contains(email)) {
+                                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                    IconButton(
+                                        colors = IconButtonDefaults.iconButtonColors(
+                                            containerColor = MaterialTheme.colorScheme.primaryContainer
+                                        ),
+                                        onClick = { /*TODO stop following the user*/ },
+                                    ) {
+                                        Icon(imageVector = Icons.Filled.Favorite, contentDescription = "Follow")
+                                    }
+                                    Text(text = "following")
+                                }
+
+                            } else {
+                                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                    IconButton(
+                                        colors = IconButtonDefaults.iconButtonColors(
+                                            containerColor = MaterialTheme.colorScheme.primaryContainer
+                                        ),
+                                        onClick = { /*TODO follow the user*/ }
+                                    ) {
+                                        Icon(imageVector = Icons.Filled.FavoriteBorder, contentDescription = "Stop following")
+                                    }
+                                    Text(text = "follow")
                                 }
                             }
                         }
-                        Text(text = "add friend")
-                    }
-
-                    if (contactDetailUiState.currentUser.data?.followingUser?.contains(email) == true) {
-                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                            IconButton(
-                                colors = IconButtonDefaults.iconButtonColors(
-                                    containerColor = MaterialTheme.colorScheme.primaryContainer
-                                ),
-                                onClick = { /*TODO stop following the user*/ },
-                            ) {
-                                Icon(imageVector = Icons.Filled.Favorite, contentDescription = "Follow")
-                            }
-                            Text(text = "following")
-                        }
-
                     } else {
-                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                            IconButton(
-                                colors = IconButtonDefaults.iconButtonColors(
-                                    containerColor = MaterialTheme.colorScheme.primaryContainer
-                                ),
-                                onClick = { /*TODO follow the user*/ }
-                            ) {
-                                Icon(imageVector = Icons.Filled.FavoriteBorder, contentDescription = "Stop following")
+                        Row(
+                            horizontalArrangement = Arrangement.SpaceEvenly,
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(0.dp, 8.dp)
+                        ) {
+                            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                IconButton(
+                                    colors = IconButtonDefaults.iconButtonColors(
+                                        containerColor = MaterialTheme.colorScheme.primaryContainer
+                                    ),
+                                    onClick = { /*TODO add friend(send request)*/
+                                        // 添加逻辑点击添加好友时查询是否已经有好友请求存在，如有，bottomsheet展示请求并提供三个选项：同意，拒绝，稍后处理
+                                        showDialog = true
+                                    }
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Filled.PersonAdd,
+                                        contentDescription = "Add friend"
+                                    )
+                                    if (showDialog) {
+                                        ConfirmationDialog() { input ->
+                                            contactDetailViewModel.addFriend(input)
+                                            showDialog = false
+                                        }
+                                    }
+                                }
+                                Text(text = "add friend")
                             }
-                            Text(text = "follow")
+
+                            if (contactDetailUiState.currentUser.data?.followingUser?.contains(email) == true) {
+                                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                    IconButton(
+                                        colors = IconButtonDefaults.iconButtonColors(
+                                            containerColor = MaterialTheme.colorScheme.primaryContainer
+                                        ),
+                                        onClick = { /*TODO stop following the user*/ },
+                                    ) {
+                                        Icon(imageVector = Icons.Filled.Favorite, contentDescription = "Follow")
+                                    }
+                                    Text(text = "following")
+                                }
+
+                            } else {
+                                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                    IconButton(
+                                        colors = IconButtonDefaults.iconButtonColors(
+                                            containerColor = MaterialTheme.colorScheme.primaryContainer
+                                        ),
+                                        onClick = { /*TODO follow the user*/ }
+                                    ) {
+                                        Icon(imageVector = Icons.Filled.FavoriteBorder, contentDescription = "Stop following")
+                                    }
+                                    Text(text = "follow")
+                                }
+                            }
                         }
                     }
-                }
-            }
 
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp, 8.dp)
-            ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp),
-                    horizontalArrangement = Arrangement.SpaceEvenly
-                ) {
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally
+                    Card(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp, 8.dp)
                     ) {
-                        Text(
-                            text = "Follower",
-                            style = MaterialTheme.typography.titleLarge
-                        )
-                        Text(
-                            //TODO get the number of people that this user has followed according to userId
-                            text = contactDetailUiState.targetUser.data?.followingCount.toString(),
-                            style = MaterialTheme.typography.titleLarge)
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(16.dp),
+                            horizontalArrangement = Arrangement.SpaceEvenly
+                        ) {
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                Text(
+                                    text = "Follower",
+                                    style = MaterialTheme.typography.titleLarge
+                                )
+                                Text(
+                                    //TODO get the number of people that this user has followed according to userId
+                                    text = contactDetailUiState.targetUser.data?.followingCount.toString(),
+                                    style = MaterialTheme.typography.titleLarge)
+                            }
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                Text(
+                                    text = "Following",
+                                    style = MaterialTheme.typography.titleLarge
+                                )
+                                Text(
+                                    //TODO get the number of followers of this user according to the userId
+                                    text = contactDetailUiState.targetUser.data?.followerCount.toString(),
+                                    style = MaterialTheme.typography.titleLarge,
+                                )
+                            }
+                        }
                     }
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally
+
+                    //TODO get the basic information of this user according to the userId
+                    ExpandableCard(
+                        birthday = contactDetailUiState.targetUser.data?.birthday ?: "00001010",
+                        gender = contactDetailUiState.targetUser.data?.gender ?: "male",
+                        email = contactDetailUiState.targetUser.data?.email ?: "template@mail.com"
+                    )
+
+                    HorizontalDivider(modifier = Modifier.padding(0.dp, 8.dp))
+
+                    Text(
+                        text = "Recent Post",
+                        modifier = Modifier.padding(32.dp, 8.dp),
+                    )
+                }
+
+                //TODO Need to show the recent post
+                items(9) {
+                    Card(
+                        modifier = Modifier
+                            .padding(16.dp, 8.dp)
+                            .height(160.dp)
+                            .fillMaxWidth(),
+                        onClick = {}
                     ) {
-                        Text(
-                            text = "Following",
-                            style = MaterialTheme.typography.titleLarge
-                        )
-                        Text(
-                            //TODO get the number of followers of this user according to the userId
-                            text = contactDetailUiState.targetUser.data?.followerCount.toString(),
-                            style = MaterialTheme.typography.titleLarge,
-                        )
+                        Text(text = "A Post", modifier = Modifier.padding(16.dp))
                     }
                 }
-            }
-
-            //TODO get the basic information of this user according to the userId
-            ExpandableCard(
-                birthday = contactDetailUiState.targetUser.data?.birthday ?: "00001010",
-                gender = contactDetailUiState.targetUser.data?.gender ?: "male",
-                email = contactDetailUiState.targetUser.data?.email ?: "template@mail.com"
-            )
-
-            HorizontalDivider(modifier = Modifier.padding(0.dp, 8.dp))
-
-            Text(
-                text = "Recent Post",
-                modifier = Modifier.padding(32.dp, 8.dp),
-            )
-        }
-
-        //TODO Need to show the recent post
-        items(9) {
-            Card(
-                modifier = Modifier
-                    .padding(16.dp, 8.dp)
-                    .height(160.dp)
-                    .fillMaxWidth(),
-                onClick = {}
-            ) {
-                Text(text = "A Post", modifier = Modifier.padding(16.dp))
             }
         }
     }
-
 }
 
 @Composable
@@ -393,4 +433,33 @@ fun ConfirmationDialog (onClose: (String) -> Unit) {
             }
         }
     )
+}
+
+
+@Preview(showSystemUi = true)
+@Composable
+fun ContactDetailContentPreview() {
+    CrossLoquiTheme {
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            Column(
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Image(
+                    imageVector = Icons.Default.SearchOff,
+                    contentDescription = "No such user",
+                    modifier = Modifier.size(64.dp)
+                )
+                Text(
+                    modifier = Modifier
+                        .padding(8.dp),
+                    text = "No such user",
+                    style = MaterialTheme.typography.titleLarge
+                )
+            }
+        }
+    }
 }

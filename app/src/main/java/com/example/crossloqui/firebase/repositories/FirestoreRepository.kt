@@ -67,7 +67,7 @@ class FirestoreRepository @Inject constructor(
                 .whereEqualTo("email", targetUserEmail)
                 .addSnapshotListener { snapshot, e ->
                     Log.d("checkLocation", "Location3")
-                    val response = if (snapshot != null){
+                    val response = if (snapshot?.isEmpty == false){
                         val targetUser = snapshot.toObjects<User>()
                         Log.d("checkLocation", "success search")
                         Log.d("checkLocation", targetUser[0].email)
