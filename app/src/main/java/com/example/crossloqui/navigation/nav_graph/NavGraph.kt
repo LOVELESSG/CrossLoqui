@@ -1,7 +1,7 @@
 package com.example.crossloqui.navigation.nav_graph
 
-import android.util.Log
 import androidx.compose.runtime.Composable
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -15,6 +15,7 @@ import com.example.crossloqui.ui.homepage.AccountInformationScreen
 import com.example.crossloqui.ui.homepage.HomepageScreen
 import com.example.crossloqui.ui.homepage.LoginScreen
 import com.example.crossloqui.ui.homepage.RegisterScreen
+import com.example.crossloqui.ui.homepage.SignupViewModel
 import com.example.crossloqui.ui.post.PostScreen
 import com.google.firebase.auth.FirebaseAuth
 
@@ -58,20 +59,24 @@ fun SetupNavGraph(
         }
         composable(
             route = Screen.Register.route
-        ) {
-            RegisterScreen(navController = navController, auth = auth)
+        ) { backStackEntry ->
+            val signupViewModel: SignupViewModel = hiltViewModel(backStackEntry)
+            RegisterScreen(
+                navController = navController,
+                signupViewModel = signupViewModel
+            )
         }
         composable(
-            route = Screen.AccountInfo.route+"/{email}/{password}"
+            route = Screen.AccountInfo.route
         ) {
-            val email = it.arguments!!.getString("email")
-            val password = it.arguments!!.getString("password")
+            val signupViewModel: SignupViewModel =
+                if (navController.previousBackStackEntry != null) hiltViewModel(
+                    navController.previousBackStackEntry!!
+                ) else hiltViewModel()
 
             AccountInformationScreen(
                 navController = navController,
-                auth = auth,
-                email = email!!,
-                password = password!!
+                signupViewModel = signupViewModel
             )
         }
         composable(

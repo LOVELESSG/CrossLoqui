@@ -1,6 +1,5 @@
 package com.example.crossloqui.ui.homepage
 
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -38,24 +37,35 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.crossloqui.ui.theme.CrossLoquiTheme
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseAuthUserCollisionException
-import io.mockk.mockk
 
 @Composable
 fun RegisterScreen(
     navController: NavController,
-    auth: FirebaseAuth
+    signupViewModel: SignupViewModel
 ) {
-    var emailAddress by remember {
-        mutableStateOf("")
-    }
-    var emailAddressValid by remember {
-        mutableStateOf("")
-    }
-    var password by remember {
-        mutableStateOf("")
-    }
+    val signupUiState = signupViewModel.signupUiState
+
+    RegisterContent(
+        emailAddress = signupUiState.emailAddress,
+        emailAddressValid = signupUiState.emailAddressValid,
+        password = signupUiState.password,
+        changeEmail = signupViewModel::changeEmail,
+        changeEmailValid = signupViewModel::changeEmailValid,
+        changePassword = signupViewModel::changePassword,
+        navController = navController
+    )
+}
+
+@Composable
+fun RegisterContent(
+    emailAddress: String,
+    emailAddressValid: String,
+    password: String,
+    changeEmail: (String) -> Unit,
+    changeEmailValid: (String) -> Unit,
+    changePassword: (String) -> Unit,
+    navController: NavController
+) {
     var passwordVisible by remember {
         mutableStateOf(false)
     }
@@ -87,7 +97,7 @@ fun RegisterScreen(
         ) {
             TextField(
                 value = emailAddress,
-                onValueChange = { emailAddress = it },
+                onValueChange = { changeEmail(it) },
                 label = { Text(text = "Email Address") },
                 placeholder = { Text(text = "Input email address")},
                 colors = TextFieldDefaults.colors(
@@ -100,7 +110,7 @@ fun RegisterScreen(
             )
             TextField(
                 value = emailAddressValid,
-                onValueChange = { emailAddressValid = it },
+                onValueChange = { changeEmailValid(it) },
                 label = { Text(text = "Validate Email Address") },
                 placeholder = { Text(text = "Input email address again") },
                 colors = TextFieldDefaults.colors(
@@ -113,7 +123,7 @@ fun RegisterScreen(
             )
             TextField(
                 value = password,
-                onValueChange = { password = it },
+                onValueChange = { changePassword(it) },
                 label = { Text(text = "Password") },
                 singleLine = true,
                 placeholder = { Text(text = "Enter your password") },
@@ -148,10 +158,10 @@ fun RegisterScreen(
                         Toast.makeText(context,"Please enter your password", Toast.LENGTH_SHORT).show()
                     else if (password.length < 6)
                         Toast.makeText(context,"Password must be at least 6 characters", Toast.LENGTH_SHORT).show()
-                    else if (!emailAddress.equals(emailAddressValid))
+                    else if (emailAddress != emailAddressValid)
                         Toast.makeText(context,"Email address must be the same", Toast.LENGTH_SHORT).show()
                     else{
-                        navController.navigate("account_info_screen/${emailAddress}/${password}")
+                        navController.navigate("account_info_screen")
                     }
                 },
                 modifier = Modifier
@@ -163,7 +173,7 @@ fun RegisterScreen(
             ClickableText(
                 text = annotatedText,
                 onClick = {
-                          navController.navigate("login_screen")
+                    navController.navigate("login_screen")
                 },
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally)
@@ -179,8 +189,15 @@ fun RegisterScreen(
 @Preview(showSystemUi = true)
 @Composable
 fun RegisterScreenPreview() {
-    val fakeFirebaseAuth = mockk<FirebaseAuth>()
     CrossLoquiTheme {
-        RegisterScreen(navController = rememberNavController(), fakeFirebaseAuth)
+        RegisterContent(
+            navController = rememberNavController(),
+            emailAddress = "",
+            emailAddressValid = "",
+            password = "",
+            changeEmail = {},
+            changeEmailValid = {},
+            changePassword = {}
+        )
     }
 }

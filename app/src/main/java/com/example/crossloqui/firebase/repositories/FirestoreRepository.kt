@@ -1,18 +1,26 @@
 package com.example.crossloqui.firebase.repositories
 
+import android.content.Context
 import android.icu.text.SimpleDateFormat
+import android.net.Uri
 import android.util.Log
+import android.widget.Toast
 import com.example.crossloqui.data.FriendRequest
 import com.example.crossloqui.data.User
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
-import com.google.firebase.firestore.toObject
 import com.google.firebase.firestore.toObjects
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
+import java.io.File
+import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import javax.inject.Inject
@@ -21,7 +29,9 @@ import javax.inject.Singleton
 @Singleton
 class FirestoreRepository @Inject constructor(
     private val auth: FirebaseAuth,
-    firestoreDB: FirebaseFirestore
+    firestoreDB: FirebaseFirestore,
+    firebaseStorage: FirebaseStorage,
+    @ApplicationContext private val context: Context
 ) {
     fun hasUser(): Boolean = auth.currentUser != null
 
@@ -30,6 +40,70 @@ class FirestoreRepository @Inject constructor(
     private val requestRef: CollectionReference = firestoreDB.collection("friendRequest")
     private val currentUserRef: CollectionReference = firestoreDB.collection("users")
     private val targetUserRef: CollectionReference = firestoreDB.collection("users")
+    private val storageRef: StorageReference = firebaseStorage.reference
+
+
+    fun createUser(
+        userName: String,
+        email: String,
+        bio: String,
+        gender: String,
+        birthday: String,
+        registerDate: String = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")),
+        password: String,
+        imagePath: String,
+        navigateToHomepage: () -> Unit
+    ) {
+        auth.createUserWithEmailAndPassword(email, password)
+            .addOnCompleteListener{ task ->
+                if (task.isSuccessful) {
+                    val file = Uri.fromFile(File(imagePath))
+                    val avatarRef = storageRef.child("avatars/${getCurrentUserId()}")
+                    val uploadTask = avatarRef.putFile(file)
+                    uploadTask.addOnFailureListener {
+                        Toast.makeText(
+                            context,
+                            "upload failed",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }.addOnSuccessListener {
+                        Toast.makeText(
+                            context,
+                            "Registration successful",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                    val user = User(
+                        name = userName,
+                        email = email,
+                        bio = bio,
+                        id = getCurrentUserId(),
+                        gender = gender,
+                        birthday = birthday,
+                        registerDate = registerDate,
+                        followingCount = 0,
+                        followerCount = 0
+                    )
+                    currentUserRef.add(user)
+                    navigateToHomepage()
+                } else {
+                    val e = task.exception
+                    if (e is FirebaseAuthUserCollisionException) {
+                        Toast.makeText(
+                            context,
+                            "Email address already registered",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    } else {
+                        Toast.makeText(
+                            context,
+                            "Registration failed",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+            }
+    }
 
     fun getNewFriendList(currentId: String): Flow<Resources<List<FriendRequest>>> = callbackFlow {
         var snapshotStateListener: ListenerRegistration? = null

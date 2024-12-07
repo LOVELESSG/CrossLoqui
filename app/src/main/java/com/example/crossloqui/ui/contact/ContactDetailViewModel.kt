@@ -68,7 +68,6 @@ class ContactDetailViewModel @Inject constructor(private val firestoreRepository
 
 data class ContactDetailUiState(
     val targetUser: Resources<User> = Resources.Loading(),
-    val isFriend: Boolean = false,
     val currentUser: Resources<User> = Resources.Loading(),
     val createRequestStatus: Boolean = false
 )
