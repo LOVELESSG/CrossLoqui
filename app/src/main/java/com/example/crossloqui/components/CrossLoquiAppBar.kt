@@ -10,7 +10,7 @@ import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.crossloqui.ui.theme.CrossLoquiTheme
+import com.example.compose.CrossLoquiTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

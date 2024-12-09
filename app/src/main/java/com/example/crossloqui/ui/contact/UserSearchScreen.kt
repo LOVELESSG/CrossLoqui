@@ -1,7 +1,6 @@
 package com.example.crossloqui.ui.contact
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
@@ -21,8 +20,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.example.compose.CrossLoquiTheme
 import com.example.crossloqui.navigation.Screen
-import com.example.crossloqui.ui.theme.CrossLoquiTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

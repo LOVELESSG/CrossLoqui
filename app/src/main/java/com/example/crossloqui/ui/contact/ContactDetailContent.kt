@@ -59,9 +59,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.compose.CrossLoquiTheme
 import com.example.crossloqui.R
 import com.example.crossloqui.firebase.repositories.Resources
-import com.example.crossloqui.ui.theme.CrossLoquiTheme
 
 @Composable
 fun ContactDetailContent(

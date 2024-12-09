@@ -14,7 +14,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.crossloqui.ui.theme.CrossLoquiTheme
+import com.example.compose.CrossLoquiTheme
 
 @Composable
 fun ConversationInput() {

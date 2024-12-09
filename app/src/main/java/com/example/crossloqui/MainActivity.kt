@@ -13,10 +13,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.example.compose.CrossLoquiTheme
 import com.example.crossloqui.components.CrossLoquiScaffold
 import com.example.crossloqui.navigation.Screen
 import com.example.crossloqui.navigation.nav_graph.SetupNavGraph
-import com.example.crossloqui.ui.theme.CrossLoquiTheme
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore

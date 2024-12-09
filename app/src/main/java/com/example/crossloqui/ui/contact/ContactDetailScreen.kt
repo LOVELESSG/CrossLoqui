@@ -14,7 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.crossloqui.ui.theme.CrossLoquiTheme
+import com.example.compose.CrossLoquiTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

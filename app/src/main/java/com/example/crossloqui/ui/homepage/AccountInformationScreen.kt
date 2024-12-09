@@ -1,5 +1,6 @@
 package com.example.crossloqui.ui.homepage
 
+import android.content.res.Configuration
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.compose.foundation.Image
@@ -21,6 +22,8 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -44,8 +47,8 @@ import coil.compose.rememberAsyncImagePainter
 import com.canhub.cropper.CropImageContract
 import com.canhub.cropper.CropImageContractOptions
 import com.canhub.cropper.CropImageOptions
+import com.example.compose.CrossLoquiTheme
 import com.example.crossloqui.R
-import com.example.crossloqui.ui.theme.CrossLoquiTheme
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -114,155 +117,158 @@ fun AccountInformationContent(
         }
     val cropOptions = CropImageContractOptions(null, CropImageOptions(imageSourceIncludeCamera = false))
 
-    Column(
-        modifier = Modifier.fillMaxSize()
-    ) {
-        Box(
-            contentAlignment = Alignment.CenterStart,
-            modifier = Modifier
-                .weight(3f)
-                .fillMaxWidth()
-                .padding(start = 32.dp)
-        ) {
-            Text(
-                text = "Account Details",
-                fontSize = 36.sp,
-                fontWeight = FontWeight.Bold
-            )
-        }
-        LazyColumn (
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 32.dp)
-                .weight(7f)
-        ) {
-
-            item {
-                Column(
+    Scaffold { paddingValues ->
+        Surface(modifier = Modifier.padding(paddingValues)) {
+            Column(
+                modifier = Modifier.fillMaxSize()
+            ) {
+                Box(
+                    contentAlignment = Alignment.CenterStart,
                     modifier = Modifier
+                        .weight(3f)
+                        .fillMaxWidth()
+                        .padding(start = 32.dp)
                 ) {
-                    Card(
-                        shape = CircleShape,
-                        modifier = Modifier
-                            .size(100.dp),
-                    ) {
-                        Image(
-                            painter = painter,
-                            contentDescription = null,
-                            modifier = Modifier
-                                .clip(CircleShape)
-                                .size(100.dp)
-                                .clickable {
-                                    launcher.launch(cropOptions)
-                                },
-                            contentScale = ContentScale.Crop
-                        )
-                    }
-                    OutlinedTextField(
-                        value = userName,
-                        onValueChange = { changeUserName(it) },
-                        label = { Text(text = "User Name") },
-                        placeholder = { Text(text = "Input your user name") },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(top = 8.dp)
+                    Text(
+                        text = "Account Details",
+                        fontSize = 36.sp,
+                        fontWeight = FontWeight.Bold
                     )
+                }
+                LazyColumn (
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(horizontal = 32.dp)
+                        .weight(7f)
+                ) {
 
-                    Row(
-                        modifier = Modifier
-                            .padding(top = 8.dp)
-                            .fillMaxWidth()
-                    ) {
-                        TextField(
-                            value = birthday,
-                            onValueChange = { changeBirthday(it) },
-                            label = { Text(text = "Birthday") },
-                            singleLine = true,
-                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                            modifier = Modifier.weight(1f)
-                        )
-                        ExposedDropdownMenuBox(
-                            expanded = expanded,
-                            onExpandedChange = { expanded = it },
+                    item {
+                        Column(
                             modifier = Modifier
-                                .padding(start = 8.dp)
-                                .weight(1f)
                         ) {
-                            TextField(
-                                modifier = Modifier.menuAnchor(),
-                                value = selectedGender,
-                                onValueChange = {changeGender(selectedGender)},
-                                readOnly = true,
-                                singleLine = true,
-                                label = { Text(text = "Gender") },
-                                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded =expanded) },
-                                colors = ExposedDropdownMenuDefaults.textFieldColors(),
-                            )
-                            ExposedDropdownMenu(
-                                expanded = expanded,
-                                onDismissRequest = { expanded = false }
+                            Card(
+                                shape = CircleShape,
+                                modifier = Modifier
+                                    .size(100.dp),
                             ) {
-                                genderOptions.forEach { option ->
-                                    DropdownMenuItem(
-                                        text = { Text(text = option) },
-                                        onClick = {
-                                            selectedGender = option
-                                            expanded = false
+                                Image(
+                                    painter = painter,
+                                    contentDescription = null,
+                                    modifier = Modifier
+                                        .clip(CircleShape)
+                                        .size(100.dp)
+                                        .clickable {
+                                            launcher.launch(cropOptions)
                                         },
-                                        contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding
+                                    contentScale = ContentScale.Crop
+                                )
+                            }
+                            OutlinedTextField(
+                                value = userName,
+                                onValueChange = { changeUserName(it) },
+                                label = { Text(text = "User Name") },
+                                placeholder = { Text(text = "Input your user name") },
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(top = 8.dp)
+                            )
+
+                            Row(
+                                modifier = Modifier
+                                    .padding(top = 8.dp)
+                                    .fillMaxWidth()
+                            ) {
+                                TextField(
+                                    value = birthday,
+                                    onValueChange = { changeBirthday(it) },
+                                    label = { Text(text = "Birthday") },
+                                    singleLine = true,
+                                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                                    modifier = Modifier.weight(1f)
+                                )
+                                ExposedDropdownMenuBox(
+                                    expanded = expanded,
+                                    onExpandedChange = { expanded = it },
+                                    modifier = Modifier
+                                        .padding(start = 8.dp)
+                                        .weight(1f)
+                                ) {
+                                    TextField(
+                                        modifier = Modifier.menuAnchor(),
+                                        value = selectedGender,
+                                        onValueChange = {changeGender(selectedGender)},
+                                        readOnly = true,
+                                        singleLine = true,
+                                        label = { Text(text = "Gender") },
+                                        trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded =expanded) },
+                                        colors = ExposedDropdownMenuDefaults.textFieldColors(),
                                     )
+                                    ExposedDropdownMenu(
+                                        expanded = expanded,
+                                        onDismissRequest = { expanded = false }
+                                    ) {
+                                        genderOptions.forEach { option ->
+                                            DropdownMenuItem(
+                                                text = { Text(text = option) },
+                                                onClick = {
+                                                    selectedGender = option
+                                                    expanded = false
+                                                },
+                                                contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding
+                                            )
+                                        }
+                                    }
                                 }
+                            }
+
+                            OutlinedTextField(
+                                value = bio,
+                                onValueChange = { changeBio(it) },
+                                label = { Text(text = "Bio") },
+                                placeholder = { Text(text = "Introduce yourself") },
+                                minLines = 3,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(top = 8.dp)
+                            )
+                            Button(
+                                onClick = {
+                                    if (isValidBirthdayFormat(inputBirthday = birthday) || birthday == "") {
+                                        try {
+                                            // Create new user
+                                            createNewUser(
+                                                userName,
+                                                email,
+                                                bio,
+                                                selectedGender,
+                                                birthday,
+                                                LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")),
+                                                password,
+                                                imagePath,
+                                                navigateToHomepage
+                                            )
+
+                                        } catch (_: Exception) {
+                                            Toast.makeText(context, "Registration failed", Toast.LENGTH_SHORT)
+                                                .show()
+                                        }
+                                    } else {
+                                        Toast.makeText(context, "Input correct birthday format like 19701201", Toast.LENGTH_LONG).show()
+                                    }
+                                },
+                                modifier = Modifier
+                                    .align(Alignment.CenterHorizontally)
+                                    .padding(top = 8.dp)
+                            ) {
+                                Text(text = "Register")
                             }
                         }
                     }
 
-                    OutlinedTextField(
-                        value = bio,
-                        onValueChange = { changeBio(it) },
-                        label = { Text(text = "Bio") },
-                        placeholder = { Text(text = "Introduce yourself") },
-                        minLines = 3,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(top = 8.dp)
-                    )
-                    Button(
-                        onClick = {
-                            if (isValidBirthdayFormat(inputBirthday = birthday) || birthday == "") {
-                                try {
-                                    // Create new user
-                                    createNewUser(
-                                        userName,
-                                        email,
-                                        bio,
-                                        selectedGender,
-                                        birthday,
-                                        LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")),
-                                        password,
-                                        imagePath,
-                                        navigateToHomepage
-                                    )
-
-                                } catch (_: Exception) {
-                                    Toast.makeText(context, "Registration failed", Toast.LENGTH_SHORT)
-                                        .show()
-                                }
-                            } else {
-                                Toast.makeText(context, "Input correct birthday format like 19701201", Toast.LENGTH_LONG).show()
-                            }
-                        },
-                        modifier = Modifier
-                            .align(Alignment.CenterHorizontally)
-                            .padding(top = 8.dp)
-                    ) {
-                        Text(text = "Register")
-                    }
                 }
             }
-
         }
     }
-
 }
 
 fun isValidBirthdayFormat(inputBirthday: String): Boolean {
@@ -271,7 +277,8 @@ fun isValidBirthdayFormat(inputBirthday: String): Boolean {
 }
 
 
-@Preview(showSystemUi = true)
+@Preview(name = "Light Mode", uiMode = Configuration.UI_MODE_NIGHT_NO)
+@Preview(name = "Dark Mode", uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun AccountInformationScreenPreview() {
 

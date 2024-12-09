@@ -1,5 +1,6 @@
 package com.example.crossloqui.ui.contact
 
+import android.content.res.Configuration
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Row
@@ -29,10 +30,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.compose.CrossLoquiTheme
 import com.example.crossloqui.R
 import com.example.crossloqui.components.CrossLoquiScaffold
 import com.example.crossloqui.firebase.repositories.Resources
-import com.example.crossloqui.ui.theme.CrossLoquiTheme
 
 @Composable
 fun NewFriendScreen(
@@ -126,7 +127,8 @@ fun NewFriendScreen(
 }
 
 
-@Preview(showSystemUi = true)
+@Preview(name = "Light Mode", uiMode = Configuration.UI_MODE_NIGHT_NO)
+@Preview(name = "Dark Mode", uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun NewFriendScreenPreview() {
     CrossLoquiTheme {
