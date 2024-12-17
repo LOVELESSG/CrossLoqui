@@ -7,7 +7,8 @@ data class FriendRequest (
     val receiverName: String,
     val message: String,
     val addTime: String,
+    val requestStatus: String,
     val members: MutableList<String?> = mutableListOf(),
 ) {
-    constructor() : this("", "", "", "", "", "")
+    constructor() : this("", "", "", "", "", "", "")
 }

@@ -1,6 +1,7 @@
 package com.example.crossloqui.ui.contact
 
 import android.content.res.Configuration
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Row
@@ -64,6 +65,7 @@ fun NewFriendScreen(
                 }
                 is Resources.Success -> {
                     items(newFriendUiState.friendRequestList.data ?: emptyList()) { friendRequest ->
+                        val requestStatus = friendRequest.requestStatus
                         if (friendRequest.senderId == newFriendViewModel.currentUserId) {
                             ListItem(
                                 headlineContent = { Text(friendRequest.receiverName) },
@@ -79,7 +81,11 @@ fun NewFriendScreen(
                                     )
                                 },
                                 trailingContent = {
-                                    Text("Request Sent")
+                                    when(requestStatus) {
+                                        "accepted" -> Text("Accepted")
+                                        "rejected" -> Text("Rejected")
+                                        "progressing" -> Text("Request Send")
+                                    }
                                 }
                             )
                         } else {
@@ -97,15 +103,24 @@ fun NewFriendScreen(
                                     )
                                 },
                                 trailingContent = {
-                                    Row {
-                                        IconButton(onClick = {}) {
-                                            Icon(Icons.Default.Check, "")
-                                        }
-                                        IconButton(onClick = {}) {
-                                            Icon(Icons.Default.Close, "")
-                                        }
+                                    when(requestStatus) {
+                                        "accepted" -> Text("Accepted")
+                                        "rejected" -> Text("Rejected")
+                                        "progressing" ->
+                                            Row {
+                                                IconButton(onClick = {
+                                                    friendRequest.senderId?.let {
+                                                        newFriendViewModel.acceptFriendRequest(friendRequest.receiverId, it)
+                                                        Log.d("click agree", "accept request")
+                                                    }
+                                                }) {
+                                                    Icon(Icons.Default.Check, "")
+                                                }
+                                                IconButton(onClick = {}) {
+                                                    Icon(Icons.Default.Close, "")
+                                                }
+                                            }
                                     }
-
                                 }
                             )
                         }

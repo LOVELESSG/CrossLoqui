@@ -10,6 +10,7 @@ import com.example.crossloqui.data.User
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import com.google.firebase.firestore.CollectionReference
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.toObjects
@@ -200,7 +201,8 @@ class FirestoreRepository @Inject constructor(
             receiverName = receiverName,
             members = mutableListOf(getCurrentUserId(), receiverId),
             message = message,
-            addTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
+            addTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
+            requestStatus = "progressing"
         )
         requestRef
             .document(greetMessage.receiverId + getCurrentUserId())
@@ -208,6 +210,25 @@ class FirestoreRepository @Inject constructor(
             .addOnCompleteListener {
                 onComplete.invoke(it.isSuccessful)
             }
+    }
+
+    fun friendRequestPass(
+        receiverId: String,
+        senderId: String
+    ) {
+        currentUserRef
+            .whereEqualTo("id", getCurrentUserId())
+            .get()
+            .addOnSuccessListener { documents ->
+                val document = documents.documents[0]
+                val docRef = document.reference
+
+                docRef.update("friendList", FieldValue.arrayUnion(senderId))
+            }
+
+        requestRef.document(receiverId + senderId).update(
+            "requestStatus", "accepted"
+        )
     }
 }
 

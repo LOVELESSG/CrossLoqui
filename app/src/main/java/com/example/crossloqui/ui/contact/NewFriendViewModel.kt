@@ -38,9 +38,13 @@ class NewFriendViewModel @Inject constructor(private val firestoreRepository: Fi
             ))
         }
     }
+
+    fun acceptFriendRequest(targetId: String, senderId: String) = viewModelScope.launch {
+        firestoreRepository.friendRequestPass(targetId, senderId)
+    }
 }
 
 
 data class NewFriendUiState(
-    val friendRequestList: Resources<List<FriendRequest>> = Resources.Loading()
+    val friendRequestList: Resources<List<FriendRequest>> = Resources.Loading(),
 )
